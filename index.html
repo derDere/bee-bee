@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>WS Demo</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<style>
+ body { font-family: system-ui, Arial, sans-serif; margin: 2rem; background:#f7f7f7; }
+ h1 { margin-top:0; font-size:1.25rem; }
+ #status { padding:0.25rem 0.5rem; display:inline-block; border-radius:4px; background:#ccc; color:#222; font-size:0.85rem; }
+ #status.connected { background:#2d8f2d; color:#fff; }
+ #status.connecting { background:#d88900; color:#fff; }
+ #status.disconnected { background:#c0392b; color:#fff; }
+ #log { background:#fff; border:1px solid #ddd; padding:0.5rem; height:300px; overflow:auto; font-size:0.8rem; }
+ #controls { margin-bottom:1rem; display:flex; gap:0.5rem; }
+ input[type=text] { flex:1; padding:0.5rem; font-size:1rem; }
+ button { padding:0.5rem 0.75rem; font-size:1rem; cursor:pointer; }
+ .msg { margin:0; padding:0.25rem 0.25rem; border-bottom:1px solid #eee; }
+ .msg.you { background:#e9f7ef; }
+ .msg.system { font-style:italic; color:#555; }
+</style>
+</head>
+<body>
+<h1>WebSocket Client</h1>
+<div id="status" class="disconnected">disconnected</div>
+<div id="controls">
+ <input id="text" type="text" placeholder="Type message (ping / PING)" />
+ <button id="sendBtn" type="button">Send</button>
+</div>
+<div id="log" aria-live="polite"></div>
+<script>
+(function(){
+  const statusEl = document.getElementById('status');
+  const logEl = document.getElementById('log');
+  const inputEl = document.getElementById('text');
+  const sendBtn = document.getElementById('sendBtn');
+
+  let ws = null;
+  let retryDelay = 500; // ms
+  const maxDelay = 5000;
+  let manualClose = false;
+
+  function setStatus(state, text){
+    statusEl.className = state;
+    statusEl.textContent = text;
+  }
+
+  function log(msg, cls){
+    const p = document.createElement('p');
+    p.className = 'msg' + (cls ? ' ' + cls : '');
+    p.textContent = '[' + new Date().toLocaleTimeString() + '] ' + msg;
+    logEl.appendChild(p);
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  function connect(){
+    setStatus('connecting','connecting');
+    ws = new WebSocket('ws://localhost:8765');
+    ws.onopen = () => {
+      setStatus('connected','connected');
+      log('connected','system');
+      retryDelay = 500; // reset backoff
+    };
+    ws.onmessage = (ev) => {
+      log(ev.data,'');
+    };
+    ws.onerror = (e) => {
+      log('error','system');
+    };
+    ws.onclose = () => {
+      setStatus('disconnected','disconnected');
+      log('disconnected','system');
+      if(!manualClose){
+        scheduleReconnect();
+      }
+    };
+  }
+
+  function scheduleReconnect(){
+    setStatus('connecting','reconnecting in ' + retryDelay + 'ms');
+    const delay = retryDelay;
+    retryDelay = Math.min(retryDelay * 2, maxDelay);
+    setTimeout(() => {
+      connect();
+    }, delay);
+  }
+
+  function sendCurrent(){
+    const text = inputEl.value.trim();
+    if(!text) return;
+    if(ws && ws.readyState === WebSocket.OPEN){
+      ws.send(text);
+      log(text,'you');
+      inputEl.value = '';
+      inputEl.focus();
+    } else {
+      log('Cannot send: not connected','system');
+    }
+  }
+
+  sendBtn.addEventListener('click', sendCurrent);
+  inputEl.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter'){
+      sendCurrent();
+    }
+  });
+
+  window.addEventListener('beforeunload', () => {
+    manualClose = true;
+    try { if(ws) ws.close(); } catch(e){}
+  });
+
+  connect();
+})();
+</script>
+</body>
+</html>
