@@ -6,7 +6,7 @@
     // If you're serving the page over https you must use wss.
     const proto = (location.protocol === 'https:' ? 'wss' : 'ws');
     const port = 8765; // change if you mapped the server differently
-    const host = 'derdere.de';
+    const host = location.hostname || 'localhost';
     const client = new WSClient(`${proto}://${host}:${port}`);
 
     let id = null;
@@ -70,7 +70,17 @@
     let ele = bee.getEle();
     pageEl.appendChild(ele);
 
-    client.start();
+    let selfHosted = true;
+    if (location.hostname.indexOf('github') !== -1) {
+        selfHosted = false;
+    }
+
+    if (selfHosted) {
+        client.start();
+    } else {
+        statusEl.className = 'connected';
+        statusEl.textContent = 'Demo';
+    }
 
     triggerWingTick();
 
