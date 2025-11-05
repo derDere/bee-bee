@@ -3,6 +3,7 @@ import uuid
 import json
 from typing import List, Type, Dict, Optional, Any
 import websockets
+import ssl
 
 class BaseClient:
     def __init__(self, server: 'BaseWebSocketServer', websocket: websockets.WebSocketServerProtocol):
@@ -60,17 +61,27 @@ class BaseClient:
                 pass
 
 class BaseWebSocketServer:
-    def __init__(self, host: str, port: int, client_class: Type[BaseClient]):
+    def __init__(self, host: str, port: int, client_class: Type[BaseClient], ssl_context: Optional[ssl.SSLContext] = None):
+        """Basic WebSocket server.
+
+        Parameters:
+            host: Interface/IP to bind.
+            port: TCP port.
+            client_class: Subclass of BaseClient to instantiate per connection.
+            ssl_context: Optional SSL context. If provided, server speaks WSS.
+        """
         self.host = host
         self.port = port
         self.client_class = client_class
+        self.ssl_context = ssl_context
         self._clients: Dict[str, BaseClient] = {}
         self._lock = asyncio.Lock()
         self._server = None
         self._stop_event = asyncio.Event()
 
     async def start(self):
-        self._server = await websockets.serve(self._handler, self.host, self.port)
+        # If ssl_context is provided we start a secure websocket server (wss)
+        self._server = await websockets.serve(self._handler, self.host, self.port, ssl=self.ssl_context)
         await self._stop_event.wait()
         await self._shutdown_impl()
 

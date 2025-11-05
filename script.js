@@ -2,8 +2,12 @@
     const statusEl = document.getElementById('status');
     const pageEl = document.getElementById('page');
 
-    //const client = new WSClient('ws://localhost:8765');
-    const client = new WSClient('wss://derdere.de:8765');
+    // Dynamically choose ws / wss based on page protocol & host.
+    // If you're serving the page over https you must use wss.
+    const proto = (location.protocol === 'https:' ? 'wss' : 'ws');
+    const port = 8765; // change if you mapped the server differently
+    const host = 'derdere.de';
+    const client = new WSClient(`${proto}://${host}:${port}`);
 
     let id = null;
     const others = {};
