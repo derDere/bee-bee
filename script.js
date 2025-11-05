@@ -2,7 +2,8 @@
     const statusEl = document.getElementById('status');
     const pageEl = document.getElementById('page');
 
-    const client = new WSClient('ws://localhost:8765');
+    //const client = new WSClient('ws://localhost:8765');
+    const client = new WSClient('ws://derdere.de:8765');
 
     let id = null;
     const others = {};
