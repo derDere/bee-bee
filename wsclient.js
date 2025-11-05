@@ -27,7 +27,13 @@
       self._setStatus('connected');
     };
     ws.onmessage = function(ev){
-      if(typeof self.onMessage === 'function') self.onMessage(ev.data);
+      var raw = ev.data;
+      try {
+        var data = JSON.parse(raw);
+        if(typeof self.onMessage === 'function') self.onMessage(data);
+      } catch(e) {
+        // silently ignore non-JSON frames
+      }
     };
     ws.onerror = function(){ };
     ws.onclose = function(){
@@ -46,7 +52,7 @@
   };
   WSClient.prototype.send = function(msg){
     if(this._ws && this._ws.readyState === WebSocket.OPEN){
-      this._ws.send(msg);
+      try { this._ws.send(JSON.stringify(msg)); } catch(e) { this._ws.send(JSON.stringify(String(msg))); }
       return true;
     }
     return false;

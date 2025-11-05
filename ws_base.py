@@ -1,6 +1,7 @@
 import asyncio
 import uuid
-from typing import List, Type, Dict, Optional
+import json
+from typing import List, Type, Dict, Optional, Any
 import websockets
 
 class BaseClient:
@@ -12,9 +13,18 @@ class BaseClient:
         self._writer_task: Optional[asyncio.Task] = asyncio.create_task(self._writer())
         self._closed = False
 
-    def send(self, msg: str):
-        if not self._closed:
-            self._outbound_queue.put_nowait(msg)
+    def send(self, msg: Any):
+        if self._closed:
+            return
+        try:
+            payload = json.dumps(msg, separators=(",", ":"))
+        except Exception:
+            # fallback: stringify then JSON encode again if needed
+            try:
+                payload = json.dumps(str(msg))
+            except Exception:
+                return
+        self._outbound_queue.put_nowait(payload)
 
     async def on_message(self, msg: str):
         pass
@@ -92,7 +102,10 @@ class BaseWebSocketServer:
                         message = message.decode('utf-8')
                     except Exception:
                         continue
-                await client.on_message(str(message))
+                parsed = self._parse_incoming(message)
+                if parsed is None:
+                    continue
+                await client.on_message(parsed)
         finally:
             async with self._lock:
                 self._clients.pop(client.id, None)
@@ -100,6 +113,12 @@ class BaseWebSocketServer:
                 await client.close()
             except Exception:
                 pass
+
+    def _parse_incoming(self, message: str) -> Any:
+        try:
+            return json.loads(message)
+        except Exception:
+            return None
 
     async def get_clients(self) -> List[BaseClient]:
         async with self._lock:

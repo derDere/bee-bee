@@ -2,14 +2,17 @@ import asyncio
 from ws_base import BaseWebSocketServer, BaseClient
 
 class Client(BaseClient):
-    async def on_message(self, msg: str):
-        if msg == "ping":
-            self.send("pong")
-        elif msg == "PING":
-            others = await self.get_others()
-            for c in others:
-                c.send("PONG")
-            self.send("PONG")
+    async def on_message(self, msg):
+        if isinstance(msg, str):
+            if msg == "ping":
+                self.send("pong")
+            elif msg == "PING":
+                others = await self.get_others()
+                for c in others:
+                    c.send("PONG")
+                self.send("PONG")
+        elif isinstance(msg, (dict, list)):
+            self.send(msg)
 
 def main():
     server = BaseWebSocketServer('localhost', 8765, Client)
