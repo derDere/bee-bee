@@ -4,7 +4,7 @@
 
 Realtime multiplayer "bee" demo using Python `websockets` and a lightweight browser client.
 
-Yes I know thir repository is a total mess! Pay me and I'll clean it up!!!
+Yes I know this repository is a total mess! Pay me and I'll clean it up!!!
 
 ## Links
 
