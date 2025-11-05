@@ -72,4 +72,9 @@
     for (let i = 0; i < cloudCount; i++) {
         addClound(pageEl);
     }
+
+    const sun = new Sun();
+    const sunEle = sun.getEle();
+    pageEl.appendChild(sunEle);
+    sun.start();
 })();

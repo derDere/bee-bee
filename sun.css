@@ -1,0 +1,40 @@
+@keyframes sun-beam-rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.sun {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    z-index: -1000;
+    transition: left 1s linear, top 1s linear;
+}
+
+.sun::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle at center, #fffadb, #ffef63);
+    border-radius: 50%;
+    box-shadow: 0 0 20px 5px rgba(255, 234, 116, 0.788);
+    z-index: -900;
+}
+
+.sun .sun-beam {
+    position: absolute;
+    width: 6000px;
+    height: 10px;
+    background: hsla(54, 100%, 69%, 0.075);
+    top: -5px;
+    left: 0px;
+    transform-origin: left center;
+    z-index: -950;
+}
