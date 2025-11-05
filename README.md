@@ -8,8 +8,8 @@ Yes I know thir repository is a total mess! Pay me and I'll clean it up!!!
 
 ## Links
 
-- Demo: [[https://derdere.github.io/bee-bee/]]
-- V1: [[https://derdere.de:8080/]]
+- Demo: [derdere.github.io/bee-bee](https://derdere.github.io/bee-bee/)
+- Version 1.0: [derdere.de:8080](https://derdere.de:8080/)
 
 ## Features
 - JSON message broadcasting of player positions / laser state
