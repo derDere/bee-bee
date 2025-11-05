@@ -11,8 +11,12 @@ class Client(BaseClient):
         self.laser_on = False
         self.laser_x = 0
         self.laser_y = 0
+        self.first_message = True
 
     async def on_message(self, msg):
+        if self.first_message:
+            self.first_message = False
+            print(f"Client {self.id} connected")
         #if isinstance(msg, str):
         #    if msg == "ping":
         #        self.send("pong")
@@ -44,6 +48,7 @@ class Client(BaseClient):
 
 def main():
     server = BaseWebSocketServer('0.0.0.0', 8765, Client)
+    print("Starting server on port 8765...")
     try:
         asyncio.run(server.start())
     except KeyboardInterrupt:
