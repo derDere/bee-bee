@@ -1,6 +1,15 @@
 # bee-bee
 
+![Screenshot](screenshot.png)
+
 Realtime multiplayer "bee" demo using Python `websockets` and a lightweight browser client.
+
+Yes I know thir repository is a total mess! Pay me and I'll clean it up!!!
+
+## Links
+
+- Demo: [[https://derdere.github.io/bee-bee/]]
+- V1: [[https://derdere.de:8080/]]
 
 ## Features
 - JSON message broadcasting of player positions / laser state
