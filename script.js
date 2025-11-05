@@ -39,4 +39,32 @@
     });
 
     bee.control();
+
+    const otherCount = 15;
+    const others = [];
+
+    for (let i = 0; i < otherCount; i++) {
+        let otherBee = new Bee();
+        otherBee.lastDir = Math.random() * 360;
+        let otherEle = otherBee.getEle();
+        pageEl.appendChild(otherEle);
+        otherBee.moveTo(
+            Math.random() * window.innerWidth,
+            Math.random() * window.innerHeight
+        );
+        others.push(otherBee);
+    }
+
+    setInterval(function() {
+        others.forEach(function(otherBee) {
+            let newAngle = otherBee.lastDir + (Math.random() - 0.5) * 60;
+            otherBee.moveInDirection(newAngle);
+            otherBee.lastDir = newAngle;
+            /* check if is outside */
+            if (otherBee.x < 0) otherBee.lastDir = 0;
+            if (otherBee.x > window.innerWidth) otherBee.lastDir = 180;
+            if (otherBee.y < 0) otherBee.lastDir = 90;
+            if (otherBee.y > window.innerHeight) otherBee.lastDir = 270;
+        });
+    }, 100);
 })();

@@ -46,6 +46,9 @@
   };
 
   Bee.prototype.moveTo = function(x, y) {
+    x = Math.round(x);
+    y = Math.round(y);
+
     let movedToTheRight = x > this.x;
 
     this.x = x;
@@ -61,6 +64,23 @@
       this.flipped = false;
     }
   };
+
+  Bee.prototype.moveTowards = function(x, y) {
+    let dx = x - this.x;
+    let dy = y - this.y;
+    let distance = Math.sqrt(dx * dx + dy * dy);
+    if (distance === 0) return;
+    let stepX = (dx / distance) * this.speed;
+    let stepY = (dy / distance) * this.speed;
+    this.moveTo(this.x + stepX, this.y + stepY);
+  };
+
+  Bee.prototype.moveInDirection = function(angleDegrees) {
+    let angleRadians = angleDegrees * (Math.PI / 180);
+    let stepX = Math.cos(angleRadians) * this.speed;
+    let stepY = Math.sin(angleRadians) * this.speed;
+    this.moveTo(this.x + stepX, this.y + stepY);
+  }
 
   Bee.prototype.getEle = function() {
     var ele = document.createElement('div');
