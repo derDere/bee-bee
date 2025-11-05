@@ -16,6 +16,9 @@ html, body {
     height: 100%;
     overflow: hidden;
     background: #6cacff;
+
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#6cacff+0,147dff+100 */
+    background: linear-gradient(to bottom,  oklch(0.7367 0.138 255.51) 0%,oklch(0.6579 0.138 255.51) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 
 #status {

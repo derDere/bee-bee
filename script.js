@@ -40,7 +40,7 @@
 
     bee.control();
 
-    const otherCount = 15;
+    const otherCount = 2; //15;
     const others = [];
 
     for (let i = 0; i < otherCount; i++) {
@@ -67,4 +67,9 @@
             if (otherBee.y > window.innerHeight) otherBee.lastDir = 270;
         });
     }, 100);
+
+    const cloudCount = 10;
+    for (let i = 0; i < cloudCount; i++) {
+        addClound(pageEl);
+    }
 })();

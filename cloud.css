@@ -1,0 +1,15 @@
+.cloud {
+    position: absolute;
+    width: 120px;
+    height: 60px;
+    pointer-events: none;
+    filter: blur(20px);
+    opacity: .2;
+    transition: left 10s linear;
+}
+
+.cloud .cloud-part {
+    position: absolute;
+    background: #ffffff;
+    border-radius: 50%;
+}
