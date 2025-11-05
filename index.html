@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8" />
-<title>WS Demo</title>
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<link rel="stylesheet" href="style.css" />
-</head>
-<body>
-<h1>WebSocket Client</h1>
-<div id="status" class="disconnected">disconnected</div>
-<div id="controls">
- <input id="text" type="text" placeholder="Type message (ping / PING)" />
- <button id="sendBtn" type="button">Send</button>
-</div>
-<div id="log" aria-live="polite"></div>
-<script src="wsclient.js"></script>
-<script src="script.js"></script>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <title>BEE-BEE</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+        <link rel="stylesheet" href="style.css" />
+        <link rel="stylesheet" href="bee.css" />
+    </head>
+    <body>
+
+        <div id="page"></div>
+
+        <div id="status" class="loading">Loading ...</div>
+
+        <script src="wsclient.js"></script>
+        <script src="bee.js"></script>
+        <script src="script.js"></script>
+    </body>
 </html>
