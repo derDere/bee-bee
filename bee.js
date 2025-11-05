@@ -43,7 +43,7 @@
     }
     this.laser.style.transform = 'rotate(' + angle + 'deg)';
     this.mouth.style.transform = 'rotate(' + angle + 'deg)';
-    this.triggerUpdate();
+    //this.triggerUpdate();
   };
 
   Bee.prototype.laserAt = function(x, y) {
@@ -65,7 +65,7 @@
       this.body.classList.remove('firing-laser');
       this.mouth.style.transform = 'rotate(0deg)';
       this.laser = null;
-      this.triggerUpdate();
+      //this.triggerUpdate();
     }
   };
 
@@ -74,6 +74,7 @@
     y = Math.round(y);
 
     let movedToTheRight = x > this.x;
+    let xDelta = Math.abs(x - this.x);
 
     this.x = x;
     this.y = y;
@@ -83,12 +84,12 @@
     if (movedToTheRight) {
       this.body.classList.add('facing-right');
       this.flipped = true;
-    } else {
+    } else if (xDelta > 0) {
       this.body.classList.remove('facing-right');
       this.flipped = false;
     }
 
-    this.triggerUpdate();
+    //this.triggerUpdate();
   };
 
   Bee.prototype.moveTowards = function(x, y) {
@@ -228,7 +229,8 @@
     };
 
     update();
-    //setInterval(update, 20);
+
+    setInterval(this.triggerUpdate, 200);
   };
 
   global.Bee = Bee;
