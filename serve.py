@@ -11,13 +11,29 @@ from ws_base import BaseWebSocketServer
 
 # ---------------- HTTP SERVER (static files) -----------------
 
+class PermissiveHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
+    # Serve from specified directory and add very permissive headers.
+    def __init__(self, *args, directory: str = '.', **kwargs):
+        super().__init__(*args, directory=directory, **kwargs)
+
+    def end_headers(self):
+        # Add permissive CORS / cache disabling headers.
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Headers', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+        self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
+        self.send_header('Pragma', 'no-cache')
+        self.send_header('Expires', '0')
+        super().end_headers()
+
+    def do_OPTIONS(self):
+        self.send_response(204)
+        self.end_headers()
+
 def start_http_server(port: int, directory: str):
-    class Handler(http.server.SimpleHTTPRequestHandler):
-        # Serve from specified directory without changing CWD globally
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, directory=directory, **kwargs)
-    httpd = socketserver.ThreadingTCPServer(("0.0.0.0", port), Handler)
-    print(f"[HTTP] Serving static files from {directory} on http://0.0.0.0:{port}")
+    handler_cls = lambda *a, **kw: PermissiveHTTPRequestHandler(*a, directory=directory, **kw)
+    httpd = socketserver.ThreadingTCPServer(("0.0.0.0", port), handler_cls)
+    print(f"[HTTP] Serving static files (permissive) from {directory} on http://0.0.0.0:{port}")
     httpd.serve_forever()
 
 # ---------------- TLS / WS helper -----------------

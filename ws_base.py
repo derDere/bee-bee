@@ -61,7 +61,8 @@ class BaseClient:
                 pass
 
 class BaseWebSocketServer:
-    def __init__(self, host: str, port: int, client_class: Type[BaseClient], ssl_context: Optional[ssl.SSLContext] = None):
+    def __init__(self, host: str, port: int, client_class: Type[BaseClient], ssl_context: Optional[ssl.SSLContext] = None,
+                 extra_headers: Optional[List[tuple]] = None):
         """Basic WebSocket server.
 
         Parameters:
@@ -74,14 +75,32 @@ class BaseWebSocketServer:
         self.port = port
         self.client_class = client_class
         self.ssl_context = ssl_context
+        # Extremely permissive extra headers (CORS-ish) if user wants to "ignore security".
+        if extra_headers is None:
+            extra_headers = [
+                ("Access-Control-Allow-Origin", "*"),
+                ("Access-Control-Allow-Headers", "*"),
+                ("Access-Control-Allow-Methods", "GET,POST,OPTIONS"),
+                ("Access-Control-Allow-Credentials", "false"),
+            ]
+        self.extra_headers = extra_headers
         self._clients: Dict[str, BaseClient] = {}
         self._lock = asyncio.Lock()
         self._server = None
         self._stop_event = asyncio.Event()
 
     async def start(self):
-        # If ssl_context is provided we start a secure websocket server (wss)
-        self._server = await websockets.serve(self._handler, self.host, self.port, ssl=self.ssl_context)
+        # If ssl_context is provided we start a secure websocket server (wss).
+        # origins=None (default) already allows all origins; we supply extra headers to be overtly permissive.
+        self._server = await websockets.serve(
+            self._handler,
+            self.host,
+            self.port,
+            ssl=self.ssl_context,
+            extra_headers=self.extra_headers,
+            max_size=None,  # no message size limit
+            max_queue=None, # no queue limit
+        )
         await self._stop_event.wait()
         await self._shutdown_impl()
 
