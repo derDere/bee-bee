@@ -230,7 +230,7 @@
 
     update();
 
-    setInterval(this.triggerUpdate, 200);
+    setInterval(this.triggerUpdate.bind(this), 200);
   };
 
   global.Bee = Bee;
