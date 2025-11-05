@@ -228,4 +228,5 @@
     filter: blur(1px);
     z-index: 200;
     transform-origin: 100% 50%;
+    transition: transform 0.1s linear;
 }
