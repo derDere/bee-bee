@@ -2,7 +2,7 @@
 
   function Bee(){
     this.x = global.innerWidth / 2;
-    this.y = global.innerHeight / 2;
+    this.y = global.innerHeight * 2;
     this.speed = 25;
     this.flipped = false;
     this.laser = null;
@@ -186,7 +186,16 @@
       if (length > 0) {
         stepX = (stepX / length) * this.speed;
         stepY = (stepY / length) * this.speed;
-        this.moveTo(this.x + stepX, this.y + stepY);
+
+        let newX = this.x + stepX;
+        let newY = this.y + stepY;
+
+        if (newX < 0) newX = 0;
+        if (newX > global.innerWidth - 50) newX = global.innerWidth - 50;
+        if (newY < 0) newY = 0;
+        if (newY > global.innerHeight - 50) newY = global.innerHeight - 50;
+
+        this.moveTo(newX, newY);
       }
 
       requestAnimationFrame(update);

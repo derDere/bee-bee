@@ -39,6 +39,13 @@
     });
 
     bee.control();
+    
+    setTimeout(() => {
+        bee.moveTo(
+            window.innerWidth / 2,
+            window.innerHeight / 2
+        );
+    }, 100);
 
     const otherCount = 2; //15;
     const others = [];
@@ -48,10 +55,12 @@
         otherBee.lastDir = Math.random() * 360;
         let otherEle = otherBee.getEle();
         pageEl.appendChild(otherEle);
-        otherBee.moveTo(
-            Math.random() * window.innerWidth,
-            Math.random() * window.innerHeight
-        );
+        setTimeout(() => {
+            otherBee.moveTo(
+                Math.random() * window.innerWidth,
+                Math.random() * window.innerHeight
+            );
+        }, 100);
         others.push(otherBee);
     }
 
