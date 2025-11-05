@@ -6,11 +6,33 @@
     this.speed = 25;
     this.flipped = false;
     this.laser = null;
+    this.laser_x = 0;
+    this.laser_y = 0;
     this.mouth = null;
+    this.callbacks = [];
   }
 
-  Bee.prototype.pointLaserAt = function(x, y) {
+  Bee.prototype.onUpdate = function(callback) {
+    this.callbacks.push(callback);
+  };
+
+  Bee.prototype.triggerUpdate = function() {
+    let data = {
+      x: this.x,
+      y: this.y,
+      laser_on: this.laser !== null,
+      laser_x: this.laser_x,
+      laser_y: this.laser_y
+    }
+    for (let callback of this.callbacks) {
+      callback(data);
+    }
+  }
+
+  Bee.prototype.pointLaserAt = function(x, y) {    
     if (!this.laser) return;
+    this.laser_x = x;
+    this.laser_y = y;
     let dx = x - (this.x + 50);
     let dy = y - (this.y + 25);
     let angle = Math.atan2(dy, dx) * (180 / Math.PI);
@@ -21,6 +43,7 @@
     }
     this.laser.style.transform = 'rotate(' + angle + 'deg)';
     this.mouth.style.transform = 'rotate(' + angle + 'deg)';
+    this.triggerUpdate();
   };
 
   Bee.prototype.laserAt = function(x, y) {
@@ -42,6 +65,7 @@
       this.body.classList.remove('firing-laser');
       this.mouth.style.transform = 'rotate(0deg)';
       this.laser = null;
+      this.triggerUpdate();
     }
   };
 
@@ -63,6 +87,8 @@
       this.body.classList.remove('facing-right');
       this.flipped = false;
     }
+
+    this.triggerUpdate();
   };
 
   Bee.prototype.moveTowards = function(x, y) {
