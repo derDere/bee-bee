@@ -43,7 +43,7 @@ class Client(BaseClient):
 
 
 def main():
-    server = BaseWebSocketServer('localhost', 8765, Client)
+    server = BaseWebSocketServer('0.0.0.0', 8765, Client)
     try:
         asyncio.run(server.start())
     except KeyboardInterrupt:
