@@ -28,22 +28,13 @@
  <button id="sendBtn" type="button">Send</button>
 </div>
 <div id="log" aria-live="polite"></div>
+<script src="wsclient.js"></script>
 <script>
 (function(){
   const statusEl = document.getElementById('status');
   const logEl = document.getElementById('log');
   const inputEl = document.getElementById('text');
   const sendBtn = document.getElementById('sendBtn');
-
-  let ws = null;
-  let retryDelay = 500; // ms
-  const maxDelay = 5000;
-  let manualClose = false;
-
-  function setStatus(state, text){
-    statusEl.className = state;
-    statusEl.textContent = text;
-  }
 
   function log(msg, cls){
     const p = document.createElement('p');
@@ -53,43 +44,22 @@
     logEl.scrollTop = logEl.scrollHeight;
   }
 
-  function connect(){
-    setStatus('connecting','connecting');
-    ws = new WebSocket('ws://localhost:8765');
-    ws.onopen = () => {
-      setStatus('connected','connected');
-      log('connected','system');
-      retryDelay = 500; // reset backoff
-    };
-    ws.onmessage = (ev) => {
-      log(ev.data,'');
-    };
-    ws.onerror = (e) => {
-      log('error','system');
-    };
-    ws.onclose = () => {
-      setStatus('disconnected','disconnected');
-      log('disconnected','system');
-      if(!manualClose){
-        scheduleReconnect();
-      }
-    };
-  }
-
-  function scheduleReconnect(){
-    setStatus('connecting','reconnecting in ' + retryDelay + 'ms');
-    const delay = retryDelay;
-    retryDelay = Math.min(retryDelay * 2, maxDelay);
-    setTimeout(() => {
-      connect();
-    }, delay);
-  }
+  const client = new WSClient('ws://localhost:8765');
+  client.onStatusChange = function(state){
+    statusEl.className = state;
+    statusEl.textContent = state;
+    if(state === 'connected') log('connected','system');
+    if(state === 'disconnected') log('disconnected','system');
+    if(state === 'connecting') log('connecting','system');
+  };
+  client.onMessage = function(msg){
+    log(msg,'');
+  };
 
   function sendCurrent(){
     const text = inputEl.value.trim();
     if(!text) return;
-    if(ws && ws.readyState === WebSocket.OPEN){
-      ws.send(text);
+    if(client.send(text)){
       log(text,'you');
       inputEl.value = '';
       inputEl.focus();
@@ -99,18 +69,10 @@
   }
 
   sendBtn.addEventListener('click', sendCurrent);
-  inputEl.addEventListener('keydown', (e) => {
-    if(e.key === 'Enter'){
-      sendCurrent();
-    }
-  });
+  inputEl.addEventListener('keydown', function(e){ if(e.key === 'Enter') sendCurrent(); });
+  window.addEventListener('beforeunload', function(){ client.close(); });
 
-  window.addEventListener('beforeunload', () => {
-    manualClose = true;
-    try { if(ws) ws.close(); } catch(e){}
-  });
-
-  connect();
+  client.start();
 })();
 </script>
 </body>
