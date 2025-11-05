@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  bee:
+    build: .
+    container_name: bee-bee
+    ports:
+      - "8080:8080"   # HTTP static site
+      - "8765:8765"   # WebSocket server
+    environment:
+      HTTP_PORT: 8080
+      WS_PORT: 8765
+      WS_HOST: 0.0.0.0
+      WS_CERT: /certs/cert.pem   # optional: provide certs to enable WSS
+      WS_KEY: /certs/key.pem
+      STATIC_DIR: /app
+    volumes:
+      - ./certs:/certs:ro
+    restart: unless-stopped
+    # If you don't want TLS inside container, remove WS_CERT/WS_KEY or cert volume.
+
+# Optional future reverse proxy service could be added here (e.g., nginx) for real HTTPS termination.

@@ -116,3 +116,108 @@ And update the Python server to listen without TLS (plain ws) on localhost.
 - Compression (permessage-deflate) if payload grows
 
 Enjoy the bees! 🐝
+
+## Docker & Docker Compose
+
+You can run everything (static HTTP + WebSocket server) in one container.
+
+### Quick Start
+```powershell
+git clone https://github.com/derDere/bee-bee.git
+cd bee-bee
+# (Optional) create certs for WSS
+mkdir certs
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout certs/key.pem -out certs/cert.pem -subj "/CN=localhost"
+# Launch
+docker compose up -d
+```
+
+Then open: `http://localhost:8080` (the `index.html` page). WebSocket server runs on port `8765`.
+
+If you provided `certs/cert.pem` and `certs/key.pem` they will be mounted and the WebSocket server will attempt to start in TLS (wss). The page itself is still served over plain HTTP (so no mixed‑content issue). If you want full HTTPS for the page, add a reverse proxy (see below).
+
+### Files Added for Containerization
+- `serve.py` – Combined launcher: starts static file HTTP server (thread) + websocket server (asyncio).
+- `Dockerfile` – Builds a slim Python image, installs deps, exposes ports 8080 & 8765.
+- `docker-compose.yml` – Single service `bee` mapping host ports and mounting optional certs.
+- `.dockerignore` – Reduces build context.
+
+### Environment Variables (compose sets defaults)
+| Variable | Purpose | Default |
+|----------|---------|---------|
+| `HTTP_PORT` | Port for static HTTP | 8080 |
+| `WS_PORT` | Port for WS/WSS | 8765 |
+| `WS_HOST` | Bind host for WS | 0.0.0.0 |
+| `WS_CERT` | Path to cert (PEM) | /certs/cert.pem (if volume mounted) |
+| `WS_KEY` | Path to key (PEM) | /certs/key.pem (if volume mounted) |
+| `STATIC_DIR` | Directory served | /app |
+
+### Rebuilding
+```powershell
+docker compose build --no-cache
+docker compose up -d
+```
+
+### Logs
+```powershell
+docker compose logs -f bee
+```
+
+### Stopping & Removing
+```powershell
+docker compose down
+```
+
+### Development Shell
+```powershell
+docker compose exec bee bash
+```
+
+### Production HTTPS Option
+For a proper HTTPS site + WSS:
+1. Run the container with plain WS + HTTP inside (as is).
+2. Put an Nginx / Caddy / Traefik reverse proxy in front that terminates TLS.
+3. Proxy both the static site and websocket upgrade on the same domain (443). Client code will auto-select `wss` when the page is https.
+
+Example `docker-compose.yml` addition (Nginx skeleton):
+```yaml
+  proxy:
+    image: nginx:1.27-alpine
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./letsencrypt:/etc/letsencrypt:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - bee
+```
+
+And an Nginx snippet for websocket pass-through:
+```nginx
+location /ws/ {
+  proxy_pass http://bee:8765/;
+  proxy_http_version 1.1;
+  proxy_set_header Upgrade $http_upgrade;
+  proxy_set_header Connection "Upgrade";
+  proxy_set_header Host $host;
+}
+location / {
+  proxy_pass http://bee:8080/;
+}
+```
+Change the client URL to use path `/ws/` if you proxy that way.
+
+### Self-Signed Cert in Container (Optional)
+If you prefer generating certs inside the container (dev only), you can extend the Dockerfile or run:
+```powershell
+docker compose exec bee openssl req -x509 -nodes -days 30 -newkey rsa:2048 -keyout /certs/key.pem -out /certs/cert.pem -subj "/CN=localhost"
+```
+Then restart the container.
+
+### Notes
+- Serving both HTTP + WS in one process avoids a second container for simple demos.
+- For scalability / observability consider separating concerns or using a framework.
+- No private keys are committed; mount them at runtime.
+
+Happy containerized buzzing! 🐝

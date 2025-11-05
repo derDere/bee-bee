@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+.git
+.gitignore
+README.md
+certs/*.key
+certs/*.pem
+# Keep certificate exclusion optional; if you want to COPY certs into image remove above lines.
