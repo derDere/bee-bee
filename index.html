@@ -3,7 +3,22 @@
     <head>
         <meta charset="UTF-8" />
         <title>BEE-BEE</title>
-        <meta name="viewport" content="width=device-width,initial-scale=0.5" />
+        <!-- Viewport tuned for mobile; disable user scaling for app feel -->
+        <meta name="viewport" content="width=device-width,initial-scale=0.5,viewport-fit=cover,user-scalable=no" />
+        <!-- iOS PWA full-screen capability -->
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="BEE-BEE" />
+        <!-- General PWA / Android Chrome -->
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="application-name" content="BEE-BEE" />
+        <meta name="theme-color" content="#000000" />
+        <!-- Prevent automatic telephone/email link styling -->
+        <meta name="format-detection" content="telephone=no,email=no" />
+        <!-- Optional manifest (add file later if desired) -->
+        <!-- <link rel="manifest" href="manifest.json" /> -->
+        <!-- Apple touch icon (re-using favicon; supply higher-res set later) -->
+        <link rel="apple-touch-icon" href="favicon.png" />
         <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
 
         <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
