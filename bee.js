@@ -11,6 +11,11 @@
     this.mouth = null;
     this.callbacks = [];
     this.lastUpdateTime = Date.now();
+    // Touch sticks instance (for mobile dual joystick)
+    if (global.TouchSicks) {
+      this.touchSticks = new global.TouchSicks();
+    }
+    this.touchLaserEngaged = false; // tracks if laser started via touch sticks
   }
 
   Bee.prototype.updateTime = function() {
@@ -198,21 +203,23 @@
     });
 
     const update = () => {
-      let stepX = 0;
-      let stepY = 0;
+      let kx = 0;
+      let ky = 0;
 
-      if (pressedKeys['w']) {
-        stepY -= 1;
+      if (pressedKeys['w']) ky -= 1;
+      if (pressedKeys['a']) kx -= 1;
+      if (pressedKeys['s']) ky += 1;
+      if (pressedKeys['d']) kx += 1;
+
+      let mx = 0, my = 0;
+      if (this.touchSticks) {
+        const mv = this.touchSticks.moveAxis();
+        mx = mv[0];
+        my = mv[1];
       }
-      if (pressedKeys['a']) {
-        stepX -= 1;
-      }
-      if (pressedKeys['s']) {
-        stepY += 1;
-      }
-      if (pressedKeys['d']) {
-        stepX += 1;
-      }
+
+      let stepX = kx + mx;
+      let stepY = ky + my;
 
       const length = Math.sqrt(stepX * stepX + stepY * stepY);
       if (length > 0) {
@@ -228,6 +235,29 @@
         if (newY > global.innerHeight - 50) newY = global.innerHeight - 50;
 
         this.moveTo(newX, newY);
+      }
+
+      // Touch laser aiming (do not interfere with mouse unless touch active)
+      if (this.touchSticks) {
+        const tv = this.touchSticks.targetAxis();
+        const ax = tv[0];
+        const ay = tv[1];
+        const touchActive = this.touchSticks.targetPressed() && (Math.abs(ax) > 0 || Math.abs(ay) > 0);
+        if (touchActive) {
+          const range = 400; // distance from bee center to project aim point
+          const targetX = this.x + 50 + ax * range;
+          const targetY = this.y + 25 + ay * range;
+          if (!this.laser) {
+            this.laserAt(targetX, targetY);
+          } else {
+            this.pointLaserAt(targetX, targetY);
+          }
+          this.touchLaserEngaged = true;
+        } else if (this.touchLaserEngaged) {
+          // Only stop if we previously engaged via touch
+          this.laserStop();
+          this.touchLaserEngaged = false;
+        }
       }
 
       requestAnimationFrame(update);
