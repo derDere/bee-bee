@@ -20,9 +20,13 @@
             beam.style.transform = 'rotate(' + (i * (360 / this.beamCount)) + 'deg)';
         }
 
+        this.moonEle = document.createElement('div');
+        this.moonEle.style.top = this.y + 'px';
+        this.moonEle.className = 'moon';
+
         this.updatePosition();
 
-        return ele;
+        return [ele, this.moonEle];
     };
 
     Sun.prototype.updatePosition = function() {
@@ -31,7 +35,37 @@
         let hours = date.getHours() + date.getMinutes() / 60;
         let percentOfDay = (hours - 6) / 12; // 0 at 6am, 1 at 6pm
         this.x = percentOfDay * (global.window.innerWidth + 200) - 100;
-        this.ele.style.left = this.x + 'px';
+        this.ele.style.left = Math.round(this.x) + 'px';
+
+        // the moon is opposite the sun it comes in at 6pm and goes out at 6am
+        // so we need to calculate its position accordingly but in two parts becase it goes across midnight
+        let moonX;
+        if (hours >= 18) {
+            let percentOfNight = (hours - 18) / 12; // 0 at 6pm, 1 at 6am
+            moonX = percentOfNight * (global.window.innerWidth + 200) - 100;
+        } else {
+            let percentOfNight = (hours + 6) / 12; // 0 at 6pm, 1 at 6am
+            moonX = percentOfNight * (global.window.innerWidth + 200) - 100;
+        }
+        this.moonEle.style.left = Math.round(moonX) + 'px';
+
+        // we allso want to add a sunset class to the document body when the sun is near the horizon
+        if (hours < 7 || hours > 17) {
+            document.body.classList.add('sunset');
+        } else {
+            document.body.classList.remove('sunset');
+        }
+
+        // and in the night we wnat to add a night class to show the moon
+        if (hours < 6 || hours > 18) {
+            document.body.classList.add('night');
+        } else {
+            document.body.classList.remove('night');
+        }
+
+        if (document.nosun) {
+            document.body.classList.remove('night');
+        }
     };
 
     Sun.prototype.start = function() {

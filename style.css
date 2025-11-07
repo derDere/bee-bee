@@ -17,9 +17,44 @@ html, body {
     overflow: hidden;
     background: #6cacff;
 
-    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#6cacff+0,147dff+100 */
     background: linear-gradient(to bottom,  oklch(0.7367 0.138 255.51) 0%,oklch(0.6579 0.138 255.51) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
+
+#page #sunset {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2000;
+
+    background: linear-gradient(to bottom,  oklch(56.765% 0.11315 255.746) 0%,oklch(74.608% 0.12363 62.348) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+
+    opacity: 0;
+    transition: opacity 5s linear;
+}
+
+    .sunset #page #sunset {
+        opacity: 1;
+    }
+
+#page #night {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1900;
+
+    background: linear-gradient(to bottom,  oklch(12.967% 0.0323 244.491) 0%,oklch(32.876% 0.12253 258.162) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+
+    opacity: 0;
+    transition: opacity 5s linear;
+}
+
+    .night #page #night {
+        opacity: 1;
+    }
 
 #status {
     font-family: Arial, Helvetica, sans-serif;

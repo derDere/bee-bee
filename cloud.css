@@ -10,6 +10,16 @@
 
 .cloud .cloud-part {
     position: absolute;
-    background: #ffffff;
+    background-color: #ffffff;
     border-radius: 50%;
+
+    transition: background-color 5s linear;
 }
+
+    .sunset .cloud .cloud-part {
+        background-color: #ffdca3;
+    }
+
+    .night .cloud .cloud-part {
+        background-color: #000120;
+    }

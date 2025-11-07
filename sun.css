@@ -7,7 +7,8 @@
     }
 }
 
-.sun {
+.sun,
+.moon {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -22,10 +23,23 @@
     left: -50px;
     width: 100px;
     height: 100px;
-    background: radial-gradient(circle at center, #fffadb, #ffef63);
     border-radius: 50%;
-    box-shadow: 0 0 20px 5px rgba(255, 234, 116, 0.788);
     z-index: -900;
+    background: radial-gradient(circle at center, #fffadb, #ffef63);
+    box-shadow: 0 0 20px 5px rgba(255, 234, 116, 0.788);
+}
+
+.moon::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    z-index: -900;
+    background: radial-gradient(circle at center, #e0e0e0, #a0a0a0);
+    box-shadow: 0 0 15px 3px rgba(200, 200, 200, 0.5);
 }
 
 .sun .sun-beam {
@@ -37,4 +51,12 @@
     left: 0px;
     transform-origin: left center;
     z-index: -950;
+
+    opacity: 1;
+
+    transition: opacity 5s linear;
 }
+
+    .night .sun .sun-beam {
+        opacity: 0;
+    }

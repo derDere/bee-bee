@@ -16,12 +16,26 @@
 .bee .neck,
 .bee .head {
     position: absolute;
-    background: #c7a200;
+    background-color: #c7a200;
     border: 3px solid #5a470a;
     border-radius: 20px;
 
-    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#c1b174+0,9e7900+100 */
-    background: radial-gradient(ellipse at center,  #c1b174 0%,#9e7900 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    transition: background-color 5s linear, border 0.5s linear;
+}
+
+.night .bee .bum,
+.night .bee .waist,
+.night .bee .body,
+.night .bee .neck,
+.night .bee .head {
+    background-color: #7a6b00;
+    border: 3px solid #2a2305;
+}
+
+.night .bee .bum:nth-child(odd) {
+    background-color: #daff53;
+    border: 3px solid #d0ff00;
+    box-shadow: 0 0 15px 2px #d0ff00;
 }
 
 .bee .bum {
@@ -228,5 +242,4 @@
     filter: blur(1px);
     z-index: 200;
     transform-origin: 100% 50%;
-    transition: transform 0.1s linear;
 }

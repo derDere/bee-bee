@@ -49,7 +49,7 @@
     };
 
     client.onMessage = function(msg){
-        console.log(msg);
+        //console.log(msg);
 
         if ("me" in msg) {
             id = msg["me"];
@@ -172,7 +172,8 @@
     }
 
     const sun = new Sun();
-    const sunEle = sun.getEle();
+    const [sunEle, moonEle] = sun.getEle();
     pageEl.appendChild(sunEle);
+    pageEl.appendChild(moonEle);
     sun.start();
 })();
