@@ -22,7 +22,10 @@ class PermissiveHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Headers', '*')
         self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
         self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
+        # no caching
+        self.send_header('Cache-Control', 'private, max-age=0, no-cache')
         self.send_header('Pragma', 'no-cache')
+        self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
         self.send_header('Expires', '0')
         super().end_headers()
 

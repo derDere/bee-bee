@@ -12,14 +12,31 @@
     let id = null;
     const others = {};
 
+    const beeCleanerInterval = 2000; // 2 seconds
+    const beeTimeout = 15000; // 15 seconds
+    const beeCleaner = function(others, pageEl) {
+        const now = Date.now();
+        for (let oid in others) {
+            let obee = others[oid];
+            if (now - obee.lastUpdateTime > beeTimeout) {
+                let oele = obee.getEle();
+                pageEl.removeChild(oele);
+                delete others[oid];
+            }
+        }
+    }.bind(this, others, pageEl);
+    setInterval(beeCleaner, beeCleanerInterval);
+
     client.onStatusChange = function(state){
         statusEl.className = state;
         statusEl.textContent = state;
         id = null;
         for (let oid in others) {
             let obee = others[oid];
-            let oele = obee.getEle();
-            pageEl.removeChild(oele);
+            obee.moveTo(obee.x, -1000);
+            setTimeout(() => {
+                pageEl.removeChild(obee.body);
+            }, 1000);
             delete others[oid];
         }
         if (state === 'connected') {
@@ -30,7 +47,7 @@
     };
 
     client.onMessage = function(msg){
-        console.log(msg);
+        // console.log(msg);
 
         if ("me" in msg) {
             id = msg["me"];
@@ -49,6 +66,7 @@
                 else {
                     obee = others[oid];
                 }
+                obee.updateTime();
                 let x = msg["x"];
                 let y = msg["y"];
                 obee.moveTo(x, y);

@@ -10,6 +10,11 @@
     this.laser_y = 0;
     this.mouth = null;
     this.callbacks = [];
+    this.lastUpdateTime = Date.now();
+  }
+
+  Bee.prototype.updateTime = function() {
+    this.lastUpdateTime = Date.now();
   }
 
   Bee.prototype.onUpdate = function(callback) {
