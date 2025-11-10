@@ -57,26 +57,43 @@
                 for (let i = 0; i < lilipdCount; i++) {
                     let lilypad = document.createElement('div');
                     lilypad.className = 'lilypad';
+                    let zadd = 0;
                     if (Math.random() < 0.5) {
                         lilypad.classList.add('flower');
+                        zadd += 20;
                     }
                     // calc top left on round pond but not on beach
-                    let waterW = pondW - (beachW * 2);
+                    let waterW = pondW - (beachW * 4);
                     let waterH = pondH;
-                    // random angle
-                    let angle = Math.random() * 2 * Math.PI;
-                    // random radius within from 0 to 1 (will later be scaled to waterW and waterH)
-                    let radius = Math.random() * 0.7;
-                    // random size from 30 to 60
-                    let size = 30 + Math.floor(Math.random() * 30);
+                    let raw = Math.random();
+                    let big = Math.floor(raw * 1e9);
+                    let angle = (big % 628318530) / 100000000 * Math.PI * 2 / (Math.PI * 2) * Math.PI * 2; // simplify: angle in [0,2pi)
+                    let rRaw = (big >> 3) % 1000000;
+                    let rNorm = rRaw / 1000000; // [0,1)
+                    let r = Math.sqrt(rNorm);
+                    let size = 30 + (big % 30);
                     let h = Math.floor(size / 4);
-                    let lx = Math.floor((waterW / 2) + Math.cos(angle) * radius * (waterW / 2 - size));
-                    let ly = Math.floor((waterH / 2) + Math.sin(angle) * radius * (waterH / 2 - size));
+                    let waterInnerW = waterW - size;
+                    let waterInnerH = waterH - h;
+                    if (waterInnerW < 0) waterInnerW = 0;
+                    if (waterInnerH < 0) waterInnerH = 0;
+                    let rx = (waterInnerW) / 2;
+                    let ry = (waterInnerH) / 2;
+                    let cx = beachW + waterW / 2;
+                    let cy = waterH / 2;
+                    let padCx = cx + Math.cos(angle) * r * rx;
+                    let padCy = cy + Math.sin(angle) * r * ry;
+                    let lx = Math.floor(padCx - size / 2);
+                    let ly = Math.floor(padCy - h / 2);
+                    if (lx < beachW) lx = beachW;
+                    if (lx + size > beachW + waterW) lx = beachW + waterW - size;
+                    if (ly < 0) ly = 0;
+                    if (ly + h > waterH) ly = waterH - h;
                     lilypad.style.width = size + 'px';
                     lilypad.style.height = h + 'px';
                     lilypad.style.left = lx + 'px';
                     lilypad.style.top = ly + 'px';
-                    lilypad.style.zIndex = (ly + h).toString();
+                    lilypad.style.zIndex = (ly + h + zadd).toString();
                     pond.appendChild(lilypad);
                 }
             } 
