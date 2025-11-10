@@ -1,7 +1,7 @@
 (function (global) {
 
   function Bee(){
-    this.x = global.innerWidth / 2;
+    this.x = 0;
     this.y = global.innerHeight * 2;
     this.speed = 25;
     this.isGhost = false;
@@ -12,6 +12,8 @@
     this.mouth = null;
     this.callbacks = [];
     this.lastUpdateTime = Date.now();
+    this.isPlayer = false;
+    this.pageFrameEl = null;
     
     if (global.TouchSicks) {
       this.touchSticks = new global.TouchSicks();
@@ -41,12 +43,18 @@
     }
   }
 
-  Bee.prototype.pointLaserAt = function(x, y) {    
+  Bee.prototype.pointLaserAt = function(x, y, dontMap = false) {    
     if (!this.laser) return;
+    let hw = window.innerWidth / 2;
+    let hh = window.innerHeight / 2;
     this.laser_x = x;
     this.laser_y = y;
-    let dx = x - (this.x + (this.flipped ? 78 : 22));
-    let dy = y - (this.y + 22);
+    if (this.isPlayer && this.pageFrameEl != null && !dontMap) {
+      this.laser_x -= (-this.x + hw - 50);
+      this.laser_y -= (-this.y + hh - 25);
+    }
+    let dx = this.laser_x - (this.x + (this.flipped ? 78 : 22));
+    let dy = this.laser_y - (this.y + 22);
     let angle = Math.atan2(dy, dx) * (180 / Math.PI);
     if (!this.flipped) {
         angle += 180;
@@ -86,17 +94,26 @@
 
     this.x = x;
     this.y = y;
+
+    if (this.isPlayer && this.pageFrameEl != null) {
+      let hw = window.innerWidth / 2;
+      let hh = window.innerHeight / 2;
+      this.pageFrameEl.style.left = (-this.x + hw - 50) + 'px';
+      this.pageFrameEl.style.top = (-this.y + hh - 25) + 'px';
+      //this.body.style.left = '500px';
+      //this.body.style.top = '500px';
+    }
     this.body.style.left = this.x + 'px';
     this.body.style.top = this.y + 'px';
 
     if (movedToTheRight) {
       this.body.classList.add('facing-right');
       this.flipped = true;
-      this.pointLaserAt(this.laser_x, this.laser_y);
+      this.pointLaserAt(this.laser_x, this.laser_y, true);
     } else if (xDelta > 0) {
       this.body.classList.remove('facing-right');
       this.flipped = false;
-      this.pointLaserAt(this.laser_x, this.laser_y);
+      this.pointLaserAt(this.laser_x, this.laser_y, true);
     }
   };
 
@@ -246,10 +263,10 @@
         let newX = this.x + stepX;
         let newY = this.y + stepY;
 
-        if (newX < 0) newX = 0;
-        if (newX > global.innerWidth - 50) newX = global.innerWidth - 50;
-        if (newY < 0) newY = 0;
-        if (newY > global.innerHeight - 50) newY = global.innerHeight - 50;
+        //if (newX < 0) newX = 0;
+        //if (newX > global.innerWidth - 50) newX = global.innerWidth - 50;
+        //if (newY < 0) newY = 0;
+        //if (newY > global.innerHeight - 50) newY = global.innerHeight - 50;
 
         this.moveTo(newX, newY);
       }

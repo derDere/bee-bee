@@ -20,6 +20,16 @@ html, body {
     background: linear-gradient(to bottom,  oklch(0.7367 0.138 255.51) 0%,oklch(0.6579 0.138 255.51) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 
+#page-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100px;
+    height: 100px;
+    overflow: visible;
+    transition: top 0.1s linear, left 0.1s linear;
+}
+
 #page #sunset {
     position: absolute;
     top: 0;

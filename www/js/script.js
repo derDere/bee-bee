@@ -1,6 +1,7 @@
 (function(){
     const statusEl = document.getElementById('status');
     const pageEl = document.getElementById('page');
+    const pageFrameEl = document.getElementById('page-frame');
 
     // Dynamically choose ws / wss based on page protocol & host.
     // If you're serving the page over https you must use wss.
@@ -12,26 +13,26 @@
     let id = null;
     const others = {};
 
-    const removeBee = function(oid, others, pageEl) {
+    const removeBee = function(oid, others, pageFrameEl) {
         let obee = others[oid];
         obee.moveTo(obee.x, -1000);
         setTimeout(() => {
-            pageEl.removeChild(obee.body);
+            pageFrameEl.removeChild(obee.body);
         }, 1000);
         delete others[oid];
     };
 
     const beeCleanerInterval = 2000; // 2 seconds
     const beeTimeout = 2000; // 15 seconds
-    const beeCleaner = function(others, pageEl) {
+    const beeCleaner = function(others, pageFrameEl) {
         const now = Date.now();
         for (let oid in others) {
             let obee = others[oid];
             if (now - obee.lastUpdateTime > beeTimeout) {
-                removeBee(oid, others, pageEl);
+                removeBee(oid, others, pageFrameEl);
             }
         }
-    }.bind(this, others, pageEl);
+    }.bind(this, others, pageFrameEl);
     setInterval(beeCleaner, beeCleanerInterval);
 
     client.onStatusChange = function(state){
@@ -39,7 +40,7 @@
         statusEl.textContent = state;
         id = null;
         for (let oid in others) {
-            removeBee(oid, others, pageEl);
+            removeBee(oid, others, pageFrameEl);
         }
         if (state === 'connected') {
             setTimeout(() => {
@@ -62,7 +63,7 @@
                 if (!(oid in others)) {
                     obee = new Bee();
                     let otherEle = obee.getEle();
-                    pageEl.appendChild(otherEle);
+                    pageFrameEl.appendChild(otherEle);
                     others[oid] = obee;
                 }
                 else {
@@ -88,7 +89,10 @@
 
     let bee = new Bee();
     let ele = bee.getEle();
-    pageEl.appendChild(ele);
+    pageFrameEl.appendChild(ele);
+
+    bee.isPlayer = true;
+    bee.pageFrameEl = pageFrameEl;
 
     let selfHosted = true;
     if (location.hostname.indexOf('github') !== -1) {
@@ -130,8 +134,8 @@
     
     setTimeout(() => {
         bee.moveTo(
-            window.innerWidth / 2,
-            window.innerHeight / 2
+            0,
+            0
         );
         client.send("who");
     }, 1000);
