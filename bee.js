@@ -45,8 +45,8 @@
     if (!this.laser) return;
     this.laser_x = x;
     this.laser_y = y;
-    let dx = x - (this.x + 50);
-    let dy = y - (this.y + 25);
+    let dx = x - (this.x + (this.flipped ? 78 : 22));
+    let dy = y - (this.y + 22);
     let angle = Math.atan2(dy, dx) * (180 / Math.PI);
     if (!this.flipped) {
         angle += 180;
@@ -92,9 +92,11 @@
     if (movedToTheRight) {
       this.body.classList.add('facing-right');
       this.flipped = true;
+      this.pointLaserAt(this.laser_x, this.laser_y);
     } else if (xDelta > 0) {
       this.body.classList.remove('facing-right');
       this.flipped = false;
+      this.pointLaserAt(this.laser_x, this.laser_y);
     }
   };
 
