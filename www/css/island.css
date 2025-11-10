@@ -8,7 +8,7 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: #228B22;
+    background: linear-gradient(to bottom,  #09540b 0%,#228b22 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     border-radius: 50%;
     z-index: 10;
 }
@@ -50,10 +50,29 @@
 
 .island .pond {
     position: absolute;
-    
-    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#5cacf2+0,055154+100 */
     background: radial-gradient(ellipse at 50% 100%,  #055154 0%, #5cacf2 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-
     border-radius: 50%;
+    border: 1px solid #b39b4f;
+    border-top-width: 0px;
+    border-bottom-width: 0px;
     z-index: 15;
+}
+
+.island .pond .lilypad {
+    position: absolute;
+    background: radial-gradient(ellipse at 50% 100%,  #0b610b 0%, #27ae60 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    border-radius: 50%;
+}
+
+.island .pond .lilypad.flower::before {
+    content: '';
+    position: absolute;
+    bottom: 20%;
+    left: 30%;
+    width: 40%;
+    height: 120%;
+    /* a nice pink lotus */
+    background: radial-gradient(ellipse at 50% 100%,  #ffb6c1 0%, #ff69b4 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    border-radius: 50%;
+
 }
