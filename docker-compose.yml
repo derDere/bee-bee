@@ -12,7 +12,7 @@ services:
       WS_HOST: 0.0.0.0
       WS_CERT: /certs/cert.pem   # optional: provide certs to enable WSS
       WS_KEY: /certs/key.pem
-      STATIC_DIR: /app
+      STATIC_DIR: /app/www
     volumes:
       - ./certs:/certs:ro
     restart: unless-stopped
