@@ -83,7 +83,26 @@
                 }
             }
         }
+
+        if ("island" in msg) {
+            // TOD: handle islands
+        }
     };
+
+    let trees = [
+        []
+    ];
+
+    let ls = [300, 400, 500, 600, 700, 800, 1500, 3000];
+    let ix = 300;
+    for (let l of ls) {
+        let cix = ix;
+        ix += l + 100;
+
+        let demoIsland = new Island(cix, 200, l, [25, 40], trees);
+        let islandEle = demoIsland.getEle();
+        pageFrameEl.appendChild(islandEle);
+    }
 
     window.addEventListener('beforeunload', function() { client.close(); });
 
@@ -133,42 +152,9 @@
     });
     
     setTimeout(() => {
-        bee.moveTo(
-            0,
-            0
-        );
+        bee.moveTo(0, 0);
         client.send("who");
     }, 1000);
-
-    //const otherCount = 2; //15;
-    //const others = [];
-    //
-    //for (let i = 0; i < otherCount; i++) {
-    //    let otherBee = new Bee();
-    //    otherBee.lastDir = Math.random() * 360;
-    //    let otherEle = otherBee.getEle();
-    //    pageEl.appendChild(otherEle);
-    //    setTimeout(() => {
-    //        otherBee.moveTo(
-    //            Math.random() * window.innerWidth,
-    //            Math.random() * window.innerHeight
-    //        );
-    //    }, 100);
-    //    others.push(otherBee);
-    //}
-    //
-    //setInterval(function() {
-    //    others.forEach(function(otherBee) {
-    //        let newAngle = otherBee.lastDir + (Math.random() - 0.5) * 60;
-    //        otherBee.moveInDirection(newAngle);
-    //        otherBee.lastDir = newAngle;
-    //        /* check if is outside */
-    //        if (otherBee.x < 0) otherBee.lastDir = 0;
-    //        if (otherBee.x > window.innerWidth) otherBee.lastDir = 180;
-    //        if (otherBee.y < 0) otherBee.lastDir = 90;
-    //        if (otherBee.y > window.innerHeight) otherBee.lastDir = 270;
-    //    });
-    //}, 100);
 
     const cloudCount = 10;
     for (let i = 0; i < cloudCount; i++) {
