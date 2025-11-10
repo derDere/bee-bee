@@ -57,7 +57,7 @@ def main():
     parser.add_argument('--ws-host', default=os.environ.get('WS_HOST', '0.0.0.0'))
     parser.add_argument('--cert', default=os.environ.get('WS_CERT'))
     parser.add_argument('--key', default=os.environ.get('WS_KEY'))
-    parser.add_argument('--static-dir', default=os.environ.get('STATIC_DIR', '.'))
+    parser.add_argument('--static-dir', default=os.environ.get('STATIC_DIR', 'www'))
     args = parser.parse_args()
 
     # Launch HTTP server in a background thread
