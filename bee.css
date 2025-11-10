@@ -60,6 +60,16 @@
         box-shadow: 0 0 2px 2px rgb(255, 0, 0);
     }
 
+.bee.ghost .bum,
+.bee.ghost .waist,
+.bee.ghost .body,
+.bee.ghost .neck,
+.bee.ghost .head {
+    background-color: #a1f9ff50 !important;
+    border: 3px solid #00bfff50 !important;
+    box-shadow: 0 0 10px 5px #00bfff50 !important;
+}
+
 .bee .stinger {
     position: absolute;
     top: 20px;
@@ -71,6 +81,10 @@
     border-left: 30px solid #000;
     border-top: 5px solid transparent;
     border-bottom: 5px solid transparent;
+}
+
+.bee.ghost .stinger {
+    border-left: 30px solid #00bfff80;
 }
 
 .bee .waist {
@@ -109,27 +123,104 @@
 
 .bee .head .eye {
     position: absolute;
-    top: 0px;
+    top: 2px;
     left: -3px;
     font-size: 10px;
+    background: #fff;
+    width: 12px;
+    height: 12px;
+    border: 1px solid #000;
+    border-radius: 50%;
+    overflow: hidden;
+    transform-origin: 50% 50%;
+    z-index: 110;
 }
+
+.bee.ghost .head .eye {
+    top: 5px;
+    left: 0px;
+    background: #002b3acb;
+    border: 0 none;
+    width: 7px;
+    height: 7px;
+}
+
+.bee .head .eye::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 1px;
+    width: 5px;
+    height: 5px;
+    background: #000;
+    border-radius: 50%;
+}
+
+.bee.ghost .head .eye::before {
+    top: 3px;
+    left: 2px;
+    background: #7fdfff;
+    width: 2px;
+    height: 2px;
+}
+
+.bee.firing-laser .head .eye::before {
+    background: red;
+}
+
 .bee .head .eye.n0 {
     left: 9px;
 }
 
+.bee.ghost .head .eye.n0 {
+    left: 11px;
+}
+
+.bee.firing-laser .head .eye {
+    rotate: 45deg;
+}
+
+.bee.firing-laser .head .eye.n0 {
+    rotate: 135deg;
+}
+
 .bee .head .mouth {
     position: absolute;
-    top: 7px;
-    left: 0px;
-    font-size: 14px;
-    transform-origin: 50% 60%;
+    top: 10px;
+    left: 5px;
+    transform-origin: 50% 50%;
+    width: 10px;
+    height: 10px;
+    background: transparent;
+    border: 1px solid #000;
+    border-top: 1px solid transparent;
+    border-right: 1px solid transparent;
+    border-radius: 50%;
+    rotate: -45deg;
+    z-index: 120;
 }
 
 .bee.firing-laser .head .mouth {
-    top: -1px;
-    left: -7px;
-    font-size: 24px;
-    text-shadow: red 0 0 15px, red 0 0 15px, red 0 0 15px;
+    top: 12px;
+    left: -3px;
+    border: 3px solid red;
+    background: black;
+    width: 25px;
+    height: 13px;
+    border-radius: 5px 5px 8px 8px;
+    rotate: 0deg;
+}
+
+.bee.ghost .head .mouth {
+    top: 15px;
+    left: 5px;
+    background: #00445ab6;
+    border: 0 none;
+    width: 8px;
+    height: 4px;
+    border-radius: 15px 15px 0 0;
+    rotate: 0deg;
+    scale: 1 2;
 }
 
 .bee .head .antenna {
@@ -144,6 +235,10 @@
     height: 12px;
     border-radius: 0 6px 0 0;
     rotate: -15deg;
+}
+
+.bee.ghost .head .antenna {
+    border-color: #00bfff80;
 }
 
 .bee .head .antenna::before {
@@ -162,6 +257,11 @@
     box-shadow: 0 0 10px 3px #fffb7d;
 }
 
+.bee.ghost .head .antenna::before {
+    background: #00bfff;
+    box-shadow: 0 0 10px 3px #00bfff;
+}
+
 .bee .head .antenna.n0 {
     top: -12px;
     left: 10px;
@@ -170,37 +270,59 @@
 
 .bee .leg {
     position: absolute;
-    top: 30px;
+    top: 25px;
     left: 25px;
     font-size: 22px;
     z-index: 110;
-    rotate: 30deg;
+    rotate: 20deg;
+    border: 3px solid #361f01;
+    border-top: 5px solid #361f01;
+    border-bottom: 0 none;
+    border-left: 0 none;
+    width: 15px;
+    height: 24px;
+    border-radius: 0 6px 4px 0;
+    transform-origin: 0% 0%;
 }
 
-.bee .leg.u0 {
-    scale: -1 1;
-    rotate: -30deg;
-    z-index: 0;
-}
+    /* Right Side */
+    .bee .leg.n1 {
+        left: 42px;
+        rotate: 30deg;
+    }
+    .bee .leg.n3 {
+        left: 50px;
+    }
+    .bee .leg.n5 {
+        left: 57px;
+        rotate: 0deg;
+    }
 
-.bee .leg.n0 {
-    top: 30px;
-    left: 10px;
-}
+    /* Left Side */
+    .bee .leg.u0 {
+        scale: -1 1;
+        rotate: -20deg;
+        z-index: 0;
+        border: 3px solid #000;
+        border-top: 5px solid #000;
+        border-bottom: 0 none;
+        border-left: 0 none;
+    }
+        .bee .leg.n0 {
+            left: 30px;
+            rotate: -30deg;
+        }
+        .bee .leg.n2 {
+            left: 42px;
+        }
+        .bee .leg.n4 {
+            left: 57px;
+            rotate: 0deg;
+        }
 
-.bee .leg.n1 {
-    top: 30px;
-    left: 40px;
-}
-
-.bee .leg.n2 {
-    top: 30px;
-    left: 40px;
-}
-
-.bee .leg.n3 {
-    top: 30px;
-    left: 55px;
+.bee.ghost .leg {
+    border-color: #00bfff80;
+    border-top-color: #00bfff80;
 }
 
 .bee .wing {
@@ -214,6 +336,11 @@
     transform: scale(1.5, 0.5) rotate(45deg);
     rotate: -20deg;
     z-index: 120;
+}
+
+.bee.ghost .wing {
+    background: #00bfff50;
+    box-shadow: 0 0 10px 5px #00bfff50;
 }
 
 .wing-tick .bee .wing.n0 {
@@ -237,7 +364,7 @@
 .bee .laser {
     position: absolute;
     top: 20px;
-    left: -5975px;
+    left: -5978px;
     width: 6000px;
     height: 3px;
     background: #ffafaf;

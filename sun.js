@@ -64,7 +64,7 @@
         }
 
         if (document.nosun) {
-            document.body.classList.remove('night');
+            document.body.classList.add('night');
         }
     };
 

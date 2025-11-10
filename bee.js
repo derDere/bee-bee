@@ -4,6 +4,7 @@
     this.x = global.innerWidth / 2;
     this.y = global.innerHeight * 2;
     this.speed = 25;
+    this.isGhost = false;
     this.flipped = false;
     this.laser = null;
     this.laser_x = 0;
@@ -11,10 +12,11 @@
     this.mouth = null;
     this.callbacks = [];
     this.lastUpdateTime = Date.now();
-    // Touch sticks instance (for mobile dual joystick)
+    
     if (global.TouchSicks) {
       this.touchSticks = new global.TouchSicks();
     }
+    
     this.touchLaserEngaged = false; // tracks if laser started via touch sticks
   }
 
@@ -52,8 +54,6 @@
         angle = -angle;
     }
     this.laser.style.transform = 'rotate(' + angle + 'deg)';
-    this.mouth.style.transform = 'rotate(' + angle + 'deg)';
-    //this.triggerUpdate();
   };
 
   Bee.prototype.laserAt = function(x, y) {
@@ -73,9 +73,7 @@
     if (this.laser) {
       this.body.removeChild(this.laser);
       this.body.classList.remove('firing-laser');
-      this.mouth.style.transform = 'rotate(0deg)';
       this.laser = null;
-      //this.triggerUpdate();
     }
   };
 
@@ -98,8 +96,6 @@
       this.body.classList.remove('facing-right');
       this.flipped = false;
     }
-
-    //this.triggerUpdate();
   };
 
   Bee.prototype.moveTowards = function(x, y) {
@@ -117,7 +113,21 @@
     let stepX = Math.cos(angleRadians) * this.speed;
     let stepY = Math.sin(angleRadians) * this.speed;
     this.moveTo(this.x + stepX, this.y + stepY);
-  }
+  };
+
+  Bee.prototype.kill = function() {
+    if (!this.isGhost) {
+      this.isGhost = true;
+      this.body.classList.add('ghost');
+    }
+  };
+
+  Bee.prototype.revive = function() {
+    if (this.isGhost) {
+      this.isGhost = false;
+      this.body.classList.remove('ghost');
+    }
+  };
 
   Bee.prototype.getEle = function() {
     var ele = document.createElement('div');
@@ -139,7 +149,7 @@
 
     const mouth = document.createElement('div');
     mouth.className = 'mouth';
-    mouth.innerText = '👄';
+    //mouth.innerText = '👄';
     head.appendChild(mouth);
     this.mouth = mouth;
 
@@ -150,8 +160,13 @@
 
         const eye = document.createElement('div');
         eye.className = 'eye n' + i;
-        eye.innerText = '👁️';
+        //eye.innerText = '👁️';
         head.appendChild(eye);
+        if (i === 0) {
+          this.rightEye = eye;
+        } else {
+          this.leftEye = eye;
+        }
 
         const antenna = document.createElement('div');
         antenna.className = 'antenna n' + i;
@@ -162,7 +177,7 @@
         let u = i % 2;
         const leg = document.createElement('div');
         leg.className = 'leg n' + i + ' u' + u;
-        leg.innerText = '🦵🏿';
+        //leg.innerText = '🦵🏿';
         ele.appendChild(leg);
     }
 
