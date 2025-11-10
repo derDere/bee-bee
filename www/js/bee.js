@@ -284,7 +284,7 @@
           if (!this.laser) {
             this.laserAt(targetX, targetY);
           } else {
-            this.pointLaserAt(targetX, targetY);
+            this.pointLaserAt(targetX, targetY, true);
           }
           this.touchLaserEngaged = true;
         } else if (this.touchLaserEngaged) {
