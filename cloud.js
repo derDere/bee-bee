@@ -67,11 +67,13 @@
         // we will just set this.ele.style.left to window.innerWidth + 100 px but adjust the transition to a speed that matches this.speed
         
         // first we calculate the distance to travel and the time it will take based on this.speed (pixels per frame at 60fps)
-        let distance = window.innerWidth + 200 + this.maxW;
+        // wee use the larger of width or height to make sure it goes all the way across even on mobile in portrait if we rotate
+        let screenMax = Math.max(window.innerWidth, window.innerHeight);
+        let distance = screenMax + 200 + this.maxW;
         let time = distance / this.speed / 60; // in seconds
 
         this.ele.style.transition = 'left ' + time + 's linear';
-        this.ele.style.left = (window.innerWidth + 100) + 'px';
+        this.ele.style.left = (screenMax + 100) + 'px';
 
         // return time in ms
         return time * 1000;
