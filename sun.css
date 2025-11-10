@@ -13,8 +13,18 @@
     width: 1px;
     height: 1px;
     z-index: -1000;
-    transition: left 1s linear, top 1s linear;
+    opacity: 1;
+    
+    transition: left 1s linear, top 1s linear, opacity 5s linear;
 }
+
+    .moon {
+        opacity: 0;
+    }
+
+    .night .moon {
+        opacity: 1;
+    }
 
 .sun::before {
     content: '';
@@ -58,5 +68,9 @@
 }
 
     .night .sun .sun-beam {
+        opacity: 0;
+    }
+
+    .night .sun {
         opacity: 0;
     }
