@@ -374,4 +374,13 @@
     filter: blur(1px);
     z-index: 200;
     transform-origin: 100% 50%;
+
+    /* animating height from 3 to 5 and back to create a sort of beam flicker */
+    animation: laser-flicker 0.1s infinite;
+}
+
+@keyframes laser-flicker {
+    0% { height: 3px; }
+    50% { height: 5px; }
+    100% { height: 3px; }
 }
