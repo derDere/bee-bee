@@ -2,6 +2,7 @@
     const statusEl = document.getElementById('status');
     const pageEl = document.getElementById('page');
     const pageFrameEl = document.getElementById('page-frame');
+    const coordsEl = document.getElementById('coords');
 
     // Dynamically choose ws / wss based on page protocol & host.
     // If you're serving the page over https you must use wss.
@@ -148,6 +149,9 @@
         if (id !== null) {
             data["id"] = id;
             client.send(data);
+
+            let coordStr = Math.round(bee.x) + ", " + Math.round(bee.y);
+            coordsEl.textContent = coordStr;
         }
     });
     
@@ -156,9 +160,9 @@
         client.send("who");
     }, 1000);
 
-    const cloudCount = 10;
+    const cloudCount = 1000;
     for (let i = 0; i < cloudCount; i++) {
-        addClound(pageEl);
+        addClound(pageFrameEl, true);
     }
 
     const sun = new Sun();

@@ -2,7 +2,7 @@
 
     function Cloud(){
         // y is the screen position height
-        this.y = Math.random() * window.innerHeight;
+        this.y = Math.round(Math.random() * (global.MAX_WORLD_RADIUS * 2)) - global.MAX_WORLD_RADIUS;
 
         // distance is the distance from the viewer with 0 at the front and 100 way back
         this.distance = Math.round(Math.random() * 100);
@@ -27,7 +27,7 @@
         this.partCount = minParts + Math.floor(Math.random() * (maxParts - minParts + 1));
     }
 
-    Cloud.prototype.getEle = function() {
+    Cloud.prototype.getEle = function(initial = false) {
         let ele = document.createElement('div');
         ele.className = 'cloud';
         ele.style.top = this.y + 'px';
@@ -54,7 +54,11 @@
         maxW += 100; // extra space
         maxW = Math.round(maxW);
         this.maxW = maxW;
-        this.ele.style.left = -maxW + 'px';
+        this.x = Math.round(-global.MAX_WORLD_RADIUS - maxW);
+        if (initial) {
+            this.x = Math.round(Math.random() * (global.MAX_WORLD_RADIUS * 2)) - global.MAX_WORLD_RADIUS;
+        }
+        this.ele.style.left = this.x + 'px';
 
         return ele;
     };
@@ -66,14 +70,44 @@
     Cloud.prototype.startAnimation = function() {
         // we will just set this.ele.style.left to window.innerWidth + 100 px but adjust the transition to a speed that matches this.speed
         
+        /* OLD PART FOR SCREEN ONLY
+        
         // first we calculate the distance to travel and the time it will take based on this.speed (pixels per frame at 60fps)
         // wee use the larger of width or height to make sure it goes all the way across even on mobile in portrait if we rotate
         let screenMax = Math.max(window.innerWidth, window.innerHeight);
+
+        OLD PART END */
+
+        let oldX = this.x;
+
+        let screenMax = global.MAX_WORLD_RADIUS * 2;
+        let minutes = global.CLOUD_LIFE_MINUTES;
+
         let distance = screenMax + 200 + this.maxW;
-        let time = distance / this.speed / 60; // in seconds
+        /* OLD let time = distance / this.speed / (minutes * 60); // in seconds */
+        let time = (minutes * 60) * (this.distance / 10); // in seconds
+        let fullTile = time;
+
+        let newX = screenMax + 100 - global.MAX_WORLD_RADIUS;
+        let realDistance = newX - this.x;
+        let p = realDistance / distance;
+        time = time * p;
+        this.x = Math.round(newX);
 
         this.ele.style.transition = 'left ' + time + 's linear';
-        this.ele.style.left = (screenMax + 100) + 'px';
+        this.ele.style.left = this.x + 'px';
+
+        console.log(
+            "Cloud:",
+              "full-distance=" + distance,
+              "full-time=" + fullTile.toFixed(2) + "s",
+              "start-x=" + oldX,
+              "new-x=" + this.x,
+              "real-distance=" + realDistance,
+              "actual-time=" + time.toFixed(2) + "s",
+              "actual-speed=" + this.speed + "px/frame",
+              "actual-traver-p=" + (p * 100).toFixed(2) + "%"
+        );
 
         // return time in ms
         return time * 1000;
@@ -81,9 +115,9 @@
 
     global.Cloud = Cloud;
 
-    global.addClound = function(pageEl) {
+    global.addClound = function(pageEl, initial = false) {
         let cloud = new Cloud();
-        let ele = cloud.getEle();
+        let ele = cloud.getEle(initial);
         pageEl.appendChild(ele);
 
         setTimeout(function() {
