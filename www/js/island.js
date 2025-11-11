@@ -99,6 +99,45 @@
             } 
         }
 
+        const TREE_PART_SIZE = 30;
+        for (let [treePos, stepSize, treeSize] of this.trees) {
+            let treeP = treePos / 100;
+            let stemP = stepSize / 100;
+            let stemHeight = Math.floor(treeSize * stemP);
+            let stepWidth = Math.floor(treeSize / 17);
+            let leavesHeight = treeSize - stemHeight;
+            let leavesCount = Math.round(leavesHeight / TREE_PART_SIZE);
+            let treeX = Math.floor(this.l * treeP);
+
+            let tree = document.createElement('div');
+            tree.className = 'tree';
+            tree.style.left = treeX + 'px';
+
+            let stem = document.createElement('div');
+            stem.className = 'stem';
+            stem.style.height = stemHeight + 'px';
+            stem.style.width = stepWidth + 'px';
+            stem.style.left = -Math.floor(stepWidth  / 2) + 'px';
+            stem.style.bottom = '0px';
+            let halfStemW = Math.floor(stepWidth / 2);
+            stem.style.borderBottomLeftRadius = halfStemW + 'px';
+            stem.style.borderBottomRightRadius = halfStemW + 'px';
+            tree.appendChild(stem);
+
+            for (let i = 0; i < leavesCount; i++) {
+                let w = (((leavesCount - i) * 2) - 1) * stepWidth / 2;
+                let leaf = document.createElement('div');
+                leaf.className = 'leaf n' + i;
+                leaf.style.height = TREE_PART_SIZE + 'px';
+                leaf.style.width = w + 'px';
+                leaf.style.left = -Math.floor(w / 2) + 'px';
+                leaf.style.bottom = (stemHeight + (i * TREE_PART_SIZE)) + 'px';
+                tree.appendChild(leaf);
+            }
+
+            ele.appendChild(tree);
+        }
+
         return ele;
     }
 
