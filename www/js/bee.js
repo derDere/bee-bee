@@ -263,10 +263,19 @@
         let newX = this.x + stepX;
         let newY = this.y + stepY;
 
+        /* OLD Border was the screen */
         //if (newX < 0) newX = 0;
         //if (newX > global.innerWidth - 50) newX = global.innerWidth - 50;
         //if (newY < 0) newY = 0;
         //if (newY > global.innerHeight - 50) newY = global.innerHeight - 50;
+
+        /* New Border is a global.MAX_WORLD_RADIUS starting from the center x:0, y:0 */
+        const distFromCenter = Math.sqrt(newX * newX + newY * newY);
+        if (distFromCenter > global.MAX_WORLD_RADIUS) {
+          const angle = Math.atan2(newY, newX);
+          newX = Math.cos(angle) * global.MAX_WORLD_RADIUS;
+          newY = Math.sin(angle) * global.MAX_WORLD_RADIUS;
+        }
 
         this.moveTo(newX, newY);
       }
