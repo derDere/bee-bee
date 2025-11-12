@@ -1,5 +1,7 @@
 (function (global) {
 
+    const TREE_PART_SIZE = 30;
+
     function Island(x, y, l, pond, trees) {
         this.x = x;
         this.y = y;
@@ -8,34 +10,76 @@
         this.trees = trees;
     }
 
-    Island.prototype.getEle = function() {
-        let ele = document.createElement('div');
-        ele.className = 'island';
-        ele.style.left = this.x + 'px';
-        ele.style.top = this.y + 'px';
-        ele.style.width = this.l + 'px';
-        let h = Math.floor(this.l / 8);
-        ele.style.height = h + 'px';
+    function addTree(ele, treePos, stemSize, treeSize) {
+        let treeP = treePos / 100;
+        let stemP = stemSize / 100;
+        let stemHeight = Math.floor(treeSize * stemP);
+        let stepWidth = Math.floor(treeSize / 17);
+        let leavesHeight = treeSize - stemHeight;
+        let partSize = TREE_PART_SIZE;
+        if (partSize > stepWidth) {
+            partSize = stepWidth;
+        }
+        let leavesCount = Math.round(leavesHeight / partSize);
+        let treeX = Math.floor(this.l * treeP);
 
-        let step = Math.floor(this.l * 0.06);
-        let startTop = Math.floor(h / 2);
-        for (let i = 0; i < 5; i++) {
-            let kh = Math.floor(((h * 0.4) + 10) - (i * (step / 6)));
-            let kliff = document.createElement('div');
-            kliff.className = 'kliff n' + i;
-            kliff.style.borderLeftWidth = step + 'px';
-            kliff.style.borderRightWidth = step + 'px';
-            kliff.style.borderTopWidth = kh + 'px';
-            kliff.style.height = kh + 'px';
-            kliff.style.top = startTop + 'px';
-            startTop += kh;
-            ele.appendChild(kliff);
+        let tree = document.createElement('div');
+        tree.className = 'tree';
+        tree.style.left = treeX + 'px';
+
+        let stem = document.createElement('div');
+        stem.className = 'stem';
+        stem.style.height = stemHeight + 'px';
+        stem.style.width = stepWidth + 'px';
+        stem.style.left = -Math.floor(stepWidth  / 2) + 'px';
+        stem.style.bottom = '0px';
+        let halfStemW = Math.floor(stepWidth / 2);
+        stem.style.borderBottomLeftRadius = halfStemW + 'px';
+        stem.style.borderBottomRightRadius = halfStemW + 'px';
+        tree.appendChild(stem);
+
+        for (let i = 0; i < leavesCount; i++) {
+            let w = (((leavesCount - i) * 2) - 1) * stepWidth / 4;
+            let leaf = document.createElement('div');
+            leaf.className = 'leaf n' + i;
+            leaf.style.height = partSize + 'px';
+            leaf.style.width = w + 'px';
+            leaf.style.left = -Math.floor(w / 2) + 'px';
+            leaf.style.bottom = (stemHeight + (i * partSize)) + 'px';
+            leaf.style.borderTopLeftRadius = partSize + 'px';
+            leaf.style.borderTopRightRadius = partSize + 'px';
+            tree.appendChild(leaf);
         }
 
-        let grass = document.createElement('div');
-        grass.className = 'grass';
-        ele.appendChild(grass);
+        ele.appendChild(tree);
+    }
 
+    function addFlower(ele, flowerPos, blossomSize, flowerSize) {
+        let flowerP = flowerPos / 100;
+        let stemP = blossomSize / 100;
+        let stemHeight = Math.floor(flowerSize * stemP);
+        let flowerHeight = flowerSize - stemHeight;
+        let flowerX = Math.floor(this.l * flowerP);
+        let flower = document.createElement('div');
+        flower.className = 'flower';
+        flower.style.left = flowerX + 'px';
+        let stem = document.createElement('div');
+        stem.className = 'flower-stem';
+        stem.style.height = stemHeight + 'px';
+        stem.style.left = '-2px';
+        stem.style.bottom = '0px';
+        flower.appendChild(stem);
+        let blossom = document.createElement('div');
+        blossom.className = 'flower-blossom';
+        blossom.style.height = flowerHeight + 'px';
+        blossom.style.width = flowerHeight + 'px';
+        blossom.style.left = -Math.floor(flowerHeight / 2) + 'px';
+        blossom.style.bottom = stemHeight + 'px';
+        flower.appendChild(blossom);
+        ele.appendChild(flower);
+    }
+
+    function addPond(grass, h) {
         if (this.pondPos > 0) {
             let pondM = this.pondSize / 100;
             let pondW = Math.floor(this.l * pondM);
@@ -98,46 +142,44 @@
                 }
             } 
         }
+    }
 
-        const TREE_PART_SIZE = 30;
+    Island.prototype.getEle = function() {
+        let ele = document.createElement('div');
+        ele.className = 'island';
+        ele.style.left = this.x + 'px';
+        ele.style.top = this.y + 'px';
+        ele.style.width = this.l + 'px';
+        let h = Math.floor(this.l / 8);
+        ele.style.height = h + 'px';
+
+        let step = Math.floor(this.l * 0.06);
+        let startTop = Math.floor(h / 2);
+        for (let i = 0; i < 5; i++) {
+            let kh = Math.floor(((h * 0.4) + 10) - (i * (step / 6)));
+            let kliff = document.createElement('div');
+            kliff.className = 'kliff n' + i;
+            kliff.style.borderLeftWidth = step + 'px';
+            kliff.style.borderRightWidth = step + 'px';
+            kliff.style.borderTopWidth = kh + 'px';
+            kliff.style.height = kh + 'px';
+            kliff.style.top = startTop + 'px';
+            startTop += kh;
+            ele.appendChild(kliff);
+        }
+
+        let grass = document.createElement('div');
+        grass.className = 'grass';
+        ele.appendChild(grass);
+
+        addPond.call(this, grass, h);
+
         for (let [treePos, stepSize, treeSize] of this.trees) {
-            let treeP = treePos / 100;
-            let stemP = stepSize / 100;
-            let stemHeight = Math.floor(treeSize * stemP);
-            let stepWidth = Math.floor(treeSize / 17);
-            let leavesHeight = treeSize - stemHeight;
-            let leavesCount = Math.round(leavesHeight / TREE_PART_SIZE);
-            let treeX = Math.floor(this.l * treeP);
-
-            let tree = document.createElement('div');
-            tree.className = 'tree';
-            tree.style.left = treeX + 'px';
-
-            let stem = document.createElement('div');
-            stem.className = 'stem';
-            stem.style.height = stemHeight + 'px';
-            stem.style.width = stepWidth + 'px';
-            stem.style.left = -Math.floor(stepWidth  / 2) + 'px';
-            stem.style.bottom = '0px';
-            let halfStemW = Math.floor(stepWidth / 2);
-            stem.style.borderBottomLeftRadius = halfStemW + 'px';
-            stem.style.borderBottomRightRadius = halfStemW + 'px';
-            tree.appendChild(stem);
-
-            for (let i = 0; i < leavesCount; i++) {
-                let w = (((leavesCount - i) * 2) - 1) * stepWidth / 4;
-                let leaf = document.createElement('div');
-                leaf.className = 'leaf n' + i;
-                leaf.style.height = TREE_PART_SIZE + 'px';
-                leaf.style.width = w + 'px';
-                leaf.style.left = -Math.floor(w / 2) + 'px';
-                leaf.style.bottom = (stemHeight + (i * TREE_PART_SIZE)) + 'px';
-                leaf.style.borderTopLeftRadius = TREE_PART_SIZE + 'px';
-                leaf.style.borderTopRightRadius = TREE_PART_SIZE + 'px';
-                tree.appendChild(leaf);
+            if (treeSize < 0) {
+                addFlower.call(this, ele, treePos, stepSize, -treeSize);
+            } else if (treeSize > 0) {
+                addTree.call(this, ele, treePos, stepSize, treeSize);
             }
-
-            ele.appendChild(tree);
         }
 
         return ele;
