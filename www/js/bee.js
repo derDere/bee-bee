@@ -1,4 +1,6 @@
 (function (global) {
+  
+  const beeRad = Math.sqrt(50 * 50 + 25 * 25);
 
   function Bee(){
     this.x = 0;
@@ -270,12 +272,16 @@
         //if (newY > global.innerHeight - 50) newY = global.innerHeight - 50;
 
         /* New Border is a global.MAX_WORLD_RADIUS starting from the center x:0, y:0 */
-        const distFromCenter = Math.sqrt(newX * newX + newY * newY);
-        if (distFromCenter > global.MAX_WORLD_RADIUS) {
-          const angle = Math.atan2(newY, newX);
-          newX = Math.cos(angle) * global.MAX_WORLD_RADIUS;
-          newY = Math.sin(angle) * global.MAX_WORLD_RADIUS;
+        let newMiddleX = newX + 50;
+        let newMiddleY = newY + 25;
+        const distFromCenter = Math.sqrt(newMiddleX * newMiddleX + newMiddleY * newMiddleY);
+        if (distFromCenter > (global.MAX_WORLD_RADIUS - beeRad)) {
+          const angle = Math.atan2(newMiddleY, newMiddleX);
+          newMiddleX = Math.cos(angle) * (global.MAX_WORLD_RADIUS - beeRad);
+          newMiddleY = Math.sin(angle) * (global.MAX_WORLD_RADIUS - beeRad);
         }
+        newX = newMiddleX - 50;
+        newY = newMiddleY - 25;
 
         this.moveTo(newX, newY);
       }
