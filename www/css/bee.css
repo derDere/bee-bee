@@ -81,16 +81,40 @@
 /* this animation not just changes size of the bar but also lets a red shadow blinkg and moves it "randomly" to make it look wiggely*/
 @keyframes alternate-wabble {
     0% {
-        box-shadow: 0 0 5px 2px #ff0000;
-        transform: translate(0px, 0px), scaleX(1);
+        box-shadow: 0 0 4px 2px #ff0000;
+        transform: translate(0, 0) scaleX(1) rotate(0deg);
+    }
+    12% {
+        box-shadow: 0 0 6px 3px #ff0000;
+        transform: translate(1px, -1px) scaleX(1.06) rotate(1deg);
+    }
+    25% {
+        box-shadow: 0 0 8px 4px #ff0000;
+        transform: translate(-1px, 1px) scaleX(1.04) rotate(-1deg);
+    }
+    37% {
+        box-shadow: 0 0 9px 4px #ff0000;
+        transform: translate(1px, 0px) scaleX(1.07) rotate(0.5deg);
     }
     50% {
         box-shadow: 0 0 10px 5px #ff0000;
-        transform: translate(1px, -1px), scaleX(1.05);
+        transform: translate(-1px, -1px) scaleX(1.1) rotate(-1deg);
+    }
+    62% {
+        box-shadow: 0 0 9px 4px #ff0000;
+        transform: translate(0px, 1px) scaleX(1.05) rotate(0.5deg);
+    }
+    75% {
+        box-shadow: 0 0 8px 4px #ff0000;
+        transform: translate(1px, -1px) scaleX(1.08) rotate(-0.5deg);
+    }
+    87% {
+        box-shadow: 0 0 6px 3px #ff0000;
+        transform: translate(-1px, 0px) scaleX(1.03) rotate(0deg);
     }
     100% {
-        box-shadow: 0 0 5px 2px #ff0000;
-        transform: translate(0px, 0px), scaleX(1);
+        box-shadow: 0 0 4px 2px #ff0000;
+        transform: translate(0, 0) scaleX(1) rotate(0deg);
     }
 }
 
