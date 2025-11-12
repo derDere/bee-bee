@@ -8,13 +8,17 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom,  #09540b 0%,#228b22 100%);
+    background: linear-gradient(to bottom,  #09540b 0%, #228b22 100%);
     border-radius: 50%;
     z-index: 10;
 }
 
     .sunset .island .grass {
         background: linear-gradient(to bottom,  #544f09 0%,#228b22 100%);
+    }
+
+    .night .island .grass {
+        background: linear-gradient(to bottom,  #021814 0%, #0e3119 100%);
     }
 
 .island .kliff {
@@ -52,6 +56,22 @@
         border-top-color: #441708;
     }
 
+.night .island .kliff {
+    border-top-color: #3e1f0c;
+}
+    .night .island .kliff.n1 {
+        border-top-color: #35210a;
+    }
+    .night .island .kliff.n2 {
+        border-top-color: #2c1908;
+    }
+    .night .island .kliff.n3 {
+        border-top-color: #231206;
+    }
+    .night .island .kliff.n4 {
+        border-top-color: #1a0b04;
+    }
+
 .island .pond {
     position: absolute;
     background: radial-gradient(ellipse at 50% 100%,  #055154 0%, #5cacf2 100%);
@@ -61,15 +81,22 @@
     border-bottom-width: 0px;
     z-index: 15;
 }
-
     .sunset .island .pond {
         background: radial-gradient(ellipse at 50% 100%,  #055154 0%, #5c77f2 100%);
+    }
+    .night .island .pond {
+        background: radial-gradient(ellipse at 50% 100%,  #012f30 0%, #003f5c 100%);
+        border-color: #44434a;
     }
 
 .island .pond .lilypad {
     position: absolute;
     background: radial-gradient(ellipse at 50% 100%,  #0b610b 0%, #27ae60 100%);
     border-radius: 50%;
+}
+
+.night .island .pond .lilypad {
+    background: radial-gradient(ellipse at 50% 100%,  #044204 0%, #0e5e2e 100%);
 }
 
 .island .pond .lilypad.flower::before {
@@ -79,9 +106,23 @@
     left: 30%;
     width: 40%;
     height: 120%;
-    /* a nice pink lotus */
     background: radial-gradient(ellipse at 50% 100%,  #ffb6c1 0%, #ff69b4 100%);
     border-radius: 50%;
+}
+
+.night .island .pond .lilypad.flower::before {
+    background: radial-gradient(ellipse at 50% 100%,  #ffdac5 0%, #ffa184 100%);
+    box-shadow: 0 0 10px 2px #ffa184;
+    /* box-shadow radius animation to make it flicker fast like a candle*/
+    animation: flowerGlow 1s infinite alternate;
+}
+@keyframes flowerGlow {
+    0% {
+        box-shadow: 0 0 5px 1px #ffa184;
+    }
+    100% {
+        box-shadow: 0 0 15px 3px #ffa184;
+    }
 }
 
 .island .tree {
@@ -97,5 +138,13 @@
     .island .tree .leaf {
         position: absolute;
         background: linear-gradient(to bottom,  #004700 0%, #006400 100%);
-        border-radius: 25% 25% 0 0;
     }
+
+
+.night .island .tree .stem {
+    background: linear-gradient(to right,  #2c1505 0%, #250213 100%);
+}
+
+.night .island .tree .leaf {
+    background: linear-gradient(to bottom,  #002325 0%, #002c1c 100%);
+}

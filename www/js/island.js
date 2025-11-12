@@ -125,13 +125,15 @@
             tree.appendChild(stem);
 
             for (let i = 0; i < leavesCount; i++) {
-                let w = (((leavesCount - i) * 2) - 1) * stepWidth / 2;
+                let w = (((leavesCount - i) * 2) - 1) * stepWidth / 4;
                 let leaf = document.createElement('div');
                 leaf.className = 'leaf n' + i;
                 leaf.style.height = TREE_PART_SIZE + 'px';
                 leaf.style.width = w + 'px';
                 leaf.style.left = -Math.floor(w / 2) + 'px';
                 leaf.style.bottom = (stemHeight + (i * TREE_PART_SIZE)) + 'px';
+                leaf.style.borderTopLeftRadius = TREE_PART_SIZE + 'px';
+                leaf.style.borderTopRightRadius = TREE_PART_SIZE + 'px';
                 tree.appendChild(leaf);
             }
 
