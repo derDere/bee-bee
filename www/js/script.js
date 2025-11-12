@@ -145,6 +145,8 @@
 
     bee.control();
 
+    document.bee = bee; // for debugging
+
     bee.onUpdate(data => {
         if (id !== null) {
             data["id"] = id;

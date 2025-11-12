@@ -3,6 +3,7 @@
   const beeRad = Math.sqrt(50 * 50 + 25 * 25);
 
   function Bee(){
+    this.hp = 10;
     this.x = 0;
     this.y = global.innerHeight * 2;
     this.speed = 25;
@@ -67,6 +68,7 @@
   };
 
   Bee.prototype.laserAt = function(x, y) {
+    if (this.isGhost) return;
     if (this.laser) {
       this.pointLaserAt(x, y);
       return;
@@ -150,8 +152,25 @@
     }
   };
 
+  Bee.prototype.setHP = function(hp) {
+    if (hp == this.hp) return;
+    if (hp < 0) hp = 0;
+    if (hp > 10) hp = 10;
+    let oldFill = 'fill' + this.hp;
+    let newFill = 'fill' + hp;
+    this.hp = hp;
+    this.hpbar.classList.remove(oldFill);
+    this.hpbar.classList.add(newFill);
+    if (this.hp <= 0) {
+      this.kill();
+    }
+    else {
+      this.revive();
+    }
+  };
+
   Bee.prototype.getEle = function() {
-    var ele = document.createElement('div');
+    var ele = document.createElement('div'); 
     ele.className = 'bee';
     ele.style.left = this.x + 'px';
     ele.style.top = this.y + 'px';
@@ -163,6 +182,11 @@
         bum.className = 'bum';
         ele.appendChild(bum);
     }
+
+    const hpbar = document.createElement('div');
+    hpbar.className = 'hpbar fill' + this.hp;
+    ele.appendChild(hpbar);
+    this.hpbar = hpbar;
 
     const head = document.createElement('div');
     head.className = 'head';

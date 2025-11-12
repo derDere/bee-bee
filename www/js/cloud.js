@@ -97,17 +97,17 @@
         this.ele.style.transition = 'left ' + time + 's linear';
         this.ele.style.left = this.x + 'px';
 
-        console.log(
-            "Cloud:",
-              "full-distance=" + distance,
-              "full-time=" + fullTile.toFixed(2) + "s",
-              "start-x=" + oldX,
-              "new-x=" + this.x,
-              "real-distance=" + realDistance,
-              "actual-time=" + time.toFixed(2) + "s",
-              "actual-speed=" + this.speed + "px/frame",
-              "actual-traver-p=" + (p * 100).toFixed(2) + "%"
-        );
+        // console.log(
+        //     "Cloud:",
+        //       "full-distance=" + distance,
+        //       "full-time=" + fullTile.toFixed(2) + "s",
+        //       "start-x=" + oldX,
+        //       "new-x=" + this.x,
+        //       "real-distance=" + realDistance,
+        //       "actual-time=" + time.toFixed(2) + "s",
+        //       "actual-speed=" + this.speed + "px/frame",
+        //       "actual-traver-p=" + (p * 100).toFixed(2) + "%"
+        // );
 
         // return time in ms
         return time * 1000;

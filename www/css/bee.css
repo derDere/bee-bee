@@ -10,6 +10,90 @@
     transform: scaleX(-1);
 }
 
+.bee .hpbar {
+    position: absolute;
+    top: -10px;
+    left: 50px;
+    width: 40px;
+    height: 5px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 3px;
+    z-index: 150;
+}
+    .bee .hpbar.fill0 {
+        display: none;
+    }
+
+.bee .hpbar::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0px;
+    height: 5px;
+    background: #f00;
+    border-radius: 3px;
+    transition: width 0.5s linear, background 0.5s linear;
+}
+    .bee .hpbar.fill10::before {
+        width: 40px;
+        background: #009c00;
+    }
+    .bee .hpbar.fill9::before {
+        width: 36px;
+        background: #009c00;
+    }
+    .bee .hpbar.fill8::before {
+        width: 32px;
+        background: #009c00;
+    }
+    .bee .hpbar.fill7::before {
+        width: 28px;
+        background: #90ce00;
+    }
+    .bee .hpbar.fill6::before {
+        width: 24px;
+        background: #ffee00;
+    }
+    .bee .hpbar.fill5::before {
+        width: 20px;
+        background: #ffa600;
+    }
+    .bee .hpbar.fill4::before {
+        width: 16px;
+        background: #ff5100;
+    }
+    .bee .hpbar.fill3::before {
+        width: 12px;
+        background: #f00;
+        animation: alternate-wabble 0.5s infinite;
+    }
+    .bee .hpbar.fill2::before {
+        width: 8px;
+        background: #f00;
+        animation: alternate-wabble 0.5s infinite;
+    }
+    .bee .hpbar.fill1::before {
+        width: 4px;
+        background: #f00;
+        animation: alternate-wabble 0.5s infinite;
+    }
+/* this animation not just changes size of the bar but also lets a red shadow blinkg and moves it "randomly" to make it look wiggely*/
+@keyframes alternate-wabble {
+    0% {
+        box-shadow: 0 0 5px 2px #ff0000;
+        transform: translate(0px, 0px), scaleX(1);
+    }
+    50% {
+        box-shadow: 0 0 10px 5px #ff0000;
+        transform: translate(1px, -1px), scaleX(1.05);
+    }
+    100% {
+        box-shadow: 0 0 5px 2px #ff0000;
+        transform: translate(0px, 0px), scaleX(1);
+    }
+}
+
 .bee .bum,
 .bee .waist,
 .bee .body,
