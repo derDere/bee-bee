@@ -9,7 +9,15 @@
     const proto = (location.protocol === 'https:' ? 'wss' : 'ws');
     const port = 8765; // change if you mapped the server differently
     const host = location.hostname || 'localhost';
-    const client = new WSClient(`${proto}://${host}:${port}`);
+    // Behind a TLS reverse proxy the page and the WebSocket share one origin:
+    // the proxy terminates TLS on 443 and forwards /ws to the WebSocket server,
+    // so no separate port is exposed. Served directly by serve.py over plain
+    // http, the WebSocket server has no proxy in front of it and is reached on
+    // its own port.
+    const wsUrl = (location.protocol === 'https:')
+        ? `${proto}://${location.host}/ws`
+        : `${proto}://${host}:${port}`;
+    const client = new WSClient(wsUrl);
 
     let id = null;
     const others = {};
